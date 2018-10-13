@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.board.mapper.UserMapper">
+
+	<select id="singUpCheck" resultType="String">
+		select email from tbl_user
+		where email = #{email}
+	</select>
+	
+	<insert id="singUp">
+		insert into tbl_user (email, pw, name)
+		values (#{email}, #{pw}, #{name})
+	</insert>
+	
+	<insert id="profileImgUp">
+		insert into tbl_user_prf (email, thumbnail_file_path)
+		values (#{email}, #{thumbnail_file_path})
+	</insert>
+	
+	<update id="accessAuthEmail">
+		update tbl_user set auth_wt = true
+		where email = #{email}
+	</update>
+	
+	<select id="loginProgress" resultType="String">
+		select pw from tbl_user
+		where email = #{email} and pw = #{pw}
+	</select>
+	
+	<select id="getPrfImg" resultType="ProfileImg">
+		select thumbnail_file_path, crea_time
+		from tbl_user_prf
+		where email = #{email}
+	</select>
+	
+	<select id="getUserInfo" resultType="UserVO">
+		select email, pw, name, auth_wt
+		from tbl_user
+		where email = #{email}
+	</select>
+
+</mapper>
