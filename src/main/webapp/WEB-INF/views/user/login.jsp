@@ -28,7 +28,7 @@
 			    
 			    <div>
 			    	<label for="loginRemember">로그인 정보 기억하기</label>
-					<input type="checkbox" name="loginRemember" id="loginRemember" />
+					<input type="checkbox" name="useCookie" />
 			    </div>
 			   
 				<input type="submit" value="로그인" class="btn btn-sm" />

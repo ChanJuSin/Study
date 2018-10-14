@@ -1,5 +1,6 @@
 package com.board.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +61,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ProfileImg prfImgInfo(String email) throws Exception {
 		return userDAO.getPrfImg(email);
+	}
+	
+	// 로그인 유지
+	@Override
+	public void keepLogin(String email, String sessionKey, Date sessionLimit) throws Exception {
+		Map<String, Object> keppUserInfo = new HashMap<>();
+		keppUserInfo.put("email", email);
+		keppUserInfo.put("sessionKey", sessionKey);
+		keppUserInfo.put("sessionLimit", sessionLimit);
+		
+		userDAO.keepLoginInfo(keppUserInfo);
+	}
+
+	// 로그인 유지 정보 가져옴
+	@Override
+	public UserVO getKeepLogin(String sessionKey) throws Exception {
+		return userDAO.getKeepLoginInfo(sessionKey);
 	}
 
 	// 로그인 처리 성공시 유저 정보 가져옴

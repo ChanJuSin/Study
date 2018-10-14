@@ -36,6 +36,16 @@
 		where email = #{email}
 	</select>
 	
+	<insert id="keepLoginInfo">
+		update tbl_user set session_key = #{sessionKey}, session_limit = #{sessionLimit}
+		where email = #{email}
+	</insert>
+	
+	<select id="getKeepLoginInfo" resultType="UserVO">
+		select email, name from tbl_user 
+		where session_key = #{sessinKey} and session_limit > now()
+	</select>
+	
 	<select id="getUserInfo" resultType="UserVO">
 		select email, pw, name, auth_wt
 		from tbl_user

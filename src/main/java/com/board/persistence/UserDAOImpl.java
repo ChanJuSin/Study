@@ -24,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	// 회원가입 여부 체크
 	@Override
-	public boolean singUpCheck(String email) {
+	public boolean singUpCheck(String email) throws Exception {
 		String returnId = sqlSession.selectOne(namespace + ".singUpCheck", email);
 		
 		if (returnId != null) {
@@ -42,13 +42,13 @@ public class UserDAOImpl implements UserDAO {
 
 	// 회원가입 진행
 	@Override
-	public void singUp(UserVO userVO) {
+	public void singUp(UserVO userVO) throws Exception {
 		sqlSession.insert(namespace + ".singUp", userVO);
 	}
 	
 	// 프로필 이미지 등록
 	@Override
-	public void profileImgUp(ProfileImg profileImg) {
+	public void profileImgUp(ProfileImg profileImg) throws Exception {
 		sqlSession.insert(namespace + ".profileImgUp", profileImg);
 	}
 
@@ -74,6 +74,18 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public ProfileImg getPrfImg(String email) throws Exception {
 		return sqlSession.selectOne(namespace + ".getPrfImg", email);
+	}
+	
+	// 로그인 정보 유지
+	@Override
+	public void keepLoginInfo(Map<String, Object> keppUserInfo) throws Exception {
+		sqlSession.update(namespace + ".keepLoginInfo", keppUserInfo);
+	}
+	
+	// 로그인 유지 정보 가져옴
+	@Override
+	public UserVO getKeepLoginInfo(String sessionKey) throws Exception {
+		return sqlSession.selectOne(namespace + ".getKeepLoginInfo", sessionKey);
 	}
 
 	// 유저 정보 얻음

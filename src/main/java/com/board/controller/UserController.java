@@ -1,7 +1,10 @@
 package com.board.controller;
 
-import javax.mail.Session;
+import java.util.Date;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import com.board.domain.user.ProfileImg;
 import com.board.domain.user.UserVO;
@@ -79,12 +83,20 @@ public class UserController {
 	
 	// 로그인 진행
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void loginPOST(UserVO userVO, Model model) throws Exception {
+	public void loginPOST(UserVO userVO, boolean useCookie, Model model, HttpSession session) throws Exception {
 		boolean loginResult = userService.login(userVO.getEmail(), userVO.getPw());
 		
 		if (!loginResult) {
 			model.addAttribute("loginInfo", null);
 		} else {
+			if (useCookie) {
+				int keepTime = 60 * 60 * 24 * 7;
+				
+				Date sessionLimit = new Date(System.currentTimeMillis() + (1000 * keepTime));
+				
+				userService.keepLogin(userVO.getEmail(), session.getId(), sessionLimit);
+			}
+			
 			model.addAttribute("prfImgInfo", userService.prfImgInfo(userVO.getEmail()));
 			model.addAttribute("loginInfo", userService.userInfo(userVO.getEmail()));
 		}
@@ -92,7 +104,18 @@ public class UserController {
 	
 	// 로그아웃
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(HttpSession session, RedirectAttributes rttr) throws Exception {
+	public String logout(HttpServletRequest reqeust, HttpServletResponse response, HttpSession session, RedirectAttributes rttr) throws Exception {
+		Cookie loginCookie = WebUtils.getCookie(reqeust, "keepLogin");
+		
+		if (loginCookie != null) {
+			UserVO userVO =  (UserVO) session.getAttribute("loginInfo");
+			
+			loginCookie.setPath("/");
+			loginCookie.setMaxAge(0);
+			response.addCookie(loginCookie);
+			userService.keepLogin(userVO.getEmail(), loginCookie.getValue(), new Date());
+		}
+
 		session.removeAttribute("loginInfo");
 		session.removeAttribute("prfImgInfo");
 		

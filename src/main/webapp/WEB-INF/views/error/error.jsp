@@ -1,14 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>°øºÎ¿ë °Ô½ÃÆÇ Error</title>
+<title>ê³µë¶€ìš© ê²Œì‹œíŒ Error</title>
 </head>
 <body>
 
-<h1>¼­¹ö ³»ºÎÀûÀÎ ¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù. °ü¸®ÀÚ¿¡°Ô ¹®ÀÇÇØÁÖ½Ê½Ã¿À.</h1>
-
+<h1>ì„œë²„ ë‚´ë¶€ì ì¸ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. ê´€ë¦¬ìžì—ê²Œ ë¬¸ì˜í•´ì£¼ì‹­ì‹œì˜¤.</h1>
+<h2>${error.getMessage() }</h2>
+<ul>
+	<c:forEach items="${error.getStackTrace() }" var="stack">
+		<li>${stack.toString() }</li>
+	</c:forEach>
+</ul>
 </body>
 </html>

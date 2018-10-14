@@ -32,18 +32,24 @@
 	</beans:bean>
 	
 	<beans:bean id="loginInterceptor" class="com.board.interceptor.LoginInterceptor" />
-	<beans:bean id="loginCheckInterceptor" class="com.board.interceptor.LoginCheckInterceptor" />
+	<beans:bean id="loginAuthInterceptor" class="com.board.interceptor.LoginAuthInterceptor" />
+	<beans:bean id="keepLoginAuthInterceptor" class="com.board.interceptor.KeppLoginAuthInterceptor" />
 	
 	<interceptors>
 		<interceptor>
 			<mapping path="/user/login" />
 			<mapping path="/user/singUp" />
-			<beans:ref bean="loginCheckInterceptor" />
+			<beans:ref bean="loginAuthInterceptor" />
 		</interceptor>
 	
 		<interceptor>
 			<mapping path="/user/login" />
 			<beans:ref bean="loginInterceptor" />
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/" />
+			<beans:ref bean="keepLoginAuthInterceptor" />
 		</interceptor>
 	</interceptors>
 	

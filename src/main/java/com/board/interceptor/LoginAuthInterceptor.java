@@ -8,7 +8,7 @@ import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
+public class LoginAuthInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

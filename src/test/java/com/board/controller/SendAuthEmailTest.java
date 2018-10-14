@@ -1,6 +1,7 @@
 package com.board.controller;
 
 import java.io.File;
+import java.util.Date;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.board.service.UserService;
 import com.board.util.authEmail.AuthEmail;
 import com.board.util.authEmail.SendAuthEmail;
 
@@ -19,6 +21,9 @@ public class SendAuthEmailTest {
 
 	@Autowired
 	private SendAuthEmail sendAuthEmail;
+	
+	@Autowired
+	private UserService userService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SendAuthEmailTest.class);
 	
@@ -41,7 +46,7 @@ public class SendAuthEmailTest {
 	
 	@Test
 	public void test() throws Exception {
-		new File("C:\\dev\\user\\profileImage\\2018\\10\\13\\s_aac6abe6-e20b-4292-ae67-72e2727798b6_milky-way-1023340_1920.jpg").delete();
+		userService.keepLogin("ckswn1259@naver.com", "15C2640189A44D6E42CA3F56CE44A75D", new Date());
 	}
 	
 }

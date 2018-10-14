@@ -1,5 +1,7 @@
 package com.board.service;
 
+import java.util.Date;
+
 import com.board.domain.user.ProfileImg;
 import com.board.domain.user.UserVO;
 
@@ -19,6 +21,12 @@ public interface UserService {
 	
 	// 프로필 이미지 정보 가져옴
 	public ProfileImg prfImgInfo(String email) throws Exception;
+	
+	// 로그인 유지
+	public void keepLogin(String email, String sessionKey, Date sessionLimit) throws Exception;
+	
+	// 로그인 유지 정보 가져옴
+	public UserVO getKeepLogin(String sessionKey) throws Exception;
 	
 	// 로그인 처리 성공시 유저 정보 가져옴
 	public UserVO userInfo(String email) throws Exception;
