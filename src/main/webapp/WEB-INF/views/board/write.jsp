@@ -20,7 +20,7 @@
 	
 	<div class="container">
 		<div class="writeForm">
-			<form method="post" action="/board/write" onsubmit="return checkForm();">
+			<form action="/board/write" method="post" enctype="multipart/form-data" id="writeForm">
 				<div class="form-group">
 			        <label for="writer">작성자</label>
 			        <input type="text" class="form-control" id="writer" value="${loginInfo.name }" name="writer" readonly />
@@ -35,6 +35,8 @@
 					<label>내용</label>
 					<div id="summernote"></div>
 				</div>
+				
+				<input type="file" name="files" />
 				
 				<input type="submit" value="글작성" class="btn btn-sm" />
 			</form>	

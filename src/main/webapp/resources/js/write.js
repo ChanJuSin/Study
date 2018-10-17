@@ -12,10 +12,7 @@ $(function() {
             contentType: false,
             success: function(filePath) {
                 filePath = filePath.substring(0, 12) + filePath.substring(14);
-                $("#summernote").summernote("insertImage", "/upload/displayFile?filePath=" + filePath + "&distinction=board", function($image) {
-                	$image.css('width', $image.width() / 1.8);
-                    $image.attr('name', 'images');
-                });
+                $("#summernote").summernote("insertImage", "/upload/displayFile?filePath=" + filePath + "&distinction=board");
             },
             error: (err) => {
                 console.error(err);
@@ -66,5 +63,19 @@ $(function() {
                 });
             }
         }
+    });
+    
+    $("#writeForm").submit(function(event) {
+    	event.preventDefault();
+    	
+    	let str = "";
+    	
+    	$(".note-editable > p > img").each(function() {
+    		let src = $(".note-editable > p > img").attr("src").split("&")[0].substring(29);
+    		str += "<input type=hidden name='images' value='"+src+"'>";
+    	});
+    	
+    	$(".note-editable > p").append(str);
+    	$("#writeForm").get(0).submit();
     });
 });

@@ -3,6 +3,7 @@ package com.board.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URLDecoder;
 
 import javax.annotation.Resource;
 
@@ -101,6 +102,9 @@ public class FileController {
 	@ResponseBody
 	@RequestMapping(value = "/deleteFile", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public ResponseEntity<String> deleteFile(String filePath, String distinction) throws Exception {
+		filePath = URLDecoder.decode(filePath, "UTF-8");
+		System.out.println(filePath);
+		
 		String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
 		
 		filePath = filePath.replace('/', File.separatorChar);
