@@ -5,9 +5,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공부용 게시판 회원가입 페이지</title>
+<link rel="stylesheet" href="/resources/css/reset.css">
 <link rel="stylesheet" href="/resources/css/singUp.css">
 <%@ include file="../include/import.jsp" %>
 <script src="/resources/js/singUp.js"></script>
+<script src="/resources/js/fileCheck.js"></script>
 </head>
 <body>
 
@@ -22,7 +24,7 @@
 			        <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요." />
 			    </div>
 			    
-			    <input type="button" value="이메일 중복체크" class="btn btn-sm email_check" />
+			    <input type="button" value="이메일 중복체크" class="btn btn-sm email_check" style="margin-bottom: 15px;" />
 			    
 			    <div class="form-group">
 			        <label for="pw">비밀번호</label>
@@ -43,7 +45,9 @@
 			   </div>
 			   
 			   <div class="profile_image_sumnail">
-			   		<h6>프로필 이미지 썸네일</h6>
+			   		<div>
+			   		<label>프로필 이미지 썸네일</label>	
+			   		</div>
 			   		<img class="profileImg" src="/upload/displayFile?distinction=profile" style="height:100px; width: 100px;">
 			   </div>
 			   

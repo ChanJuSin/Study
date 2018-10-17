@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공부용 게시판 홈</title>
+<link rel="stylesheet" href="/resources/css/reset.css">
 <link rel="stylesheet" href="/resources/css/home.css">
 <%@ include file="include/import.jsp" %>
 </head>

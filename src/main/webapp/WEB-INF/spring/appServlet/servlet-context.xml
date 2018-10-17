@@ -28,12 +28,17 @@
 	
 	<!-- 프로필 이미지 업로드 위치 -->
 	<beans:bean id="profileImgUploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\dev\user\profileImage" />
+		<beans:constructor-arg value="C:\dev\upload\profileImage" />
+	</beans:bean>
+	
+	<beans:bean id="boardImgUploadPath" class="java.lang.String">
+		<beans:constructor-arg value="C:\dev\upload/boardImage" />
 	</beans:bean>
 	
 	<beans:bean id="loginInterceptor" class="com.board.interceptor.LoginInterceptor" />
 	<beans:bean id="loginAuthInterceptor" class="com.board.interceptor.LoginAuthInterceptor" />
 	<beans:bean id="keepLoginAuthInterceptor" class="com.board.interceptor.KeppLoginAuthInterceptor" />
+	<beans:bean id="loginAuthWhetherInterceptor" class="com.board.interceptor.LoginAuthWhetherInterceptor" />
 	
 	<interceptors>
 		<interceptor>
@@ -50,6 +55,11 @@
 		<interceptor>
 			<mapping path="/" />
 			<beans:ref bean="keepLoginAuthInterceptor" />
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/board/write" />
+			<beans:ref bean="loginAuthWhetherInterceptor" />
 		</interceptor>
 	</interceptors>
 	

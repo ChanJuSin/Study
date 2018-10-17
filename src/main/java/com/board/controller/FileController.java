@@ -23,16 +23,23 @@ import com.board.util.upload.UploadFileUtils;
 
 @Controller
 @RequestMapping("/upload/*")
-public class UploadController {
+public class FileController {
 	
 	@Resource(name = "profileImgUploadPath") 
 	private String profileImgUploadPath;
+	
+	@Resource(name = "boardImgUploadPath")
+	private String boardImgUploadPath;
 
 	// 파일 업로드 컨트롤러
 	@ResponseBody
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-	public ResponseEntity<String> uploadAjax(MultipartFile file) throws Exception {
-		return new ResponseEntity<>(UploadFileUtils.uploadFile(profileImgUploadPath, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);
+	public ResponseEntity<String> uploadAjax(MultipartFile file, String distinction) throws Exception {
+		if (distinction.equals("profile")) {
+			return new ResponseEntity<>(UploadFileUtils.uploadFile(profileImgUploadPath, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);	
+		} 
+		
+		return new ResponseEntity<>(UploadFileUtils.uploadFile(boardImgUploadPath, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);
 	}
 	
 	// 파일 이미지 / 다운로드 컨트롤러
@@ -48,8 +55,8 @@ public class UploadController {
 				entity = displayFileProcess(profileImgUploadPath, filePath.replace('/', File.separatorChar));
 			}
 		} else {
-			
-		}
+			entity = displayFileProcess(boardImgUploadPath, filePath.replace('/', File.separatorChar));
+		} 
 		
 		return entity;
 	}
@@ -96,15 +103,22 @@ public class UploadController {
 	public ResponseEntity<String> deleteFile(String filePath, String distinction) throws Exception {
 		String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
 		
+		filePath = filePath.replace('/', File.separatorChar);
+		
 		if (distinction.equals("profile")) {
 			if (MediaUtils.getMediaType(fileType) != null) {
-				filePath = filePath.replace('/', File.separatorChar);
-				
 				new File(profileImgUploadPath + filePath).delete();
 				new File(profileImgUploadPath + filePath.substring(0, 12) + filePath.substring(14)).delete();
+			} else {
+				
 			}
 		} else {
-			
+			if (MediaUtils.getMediaType(fileType) != null) {
+				new File(boardImgUploadPath + filePath).delete();
+				new File(boardImgUploadPath + filePath.substring(0, 12) + "s_" + filePath.substring(12)).delete();
+			} else {
+				
+			}
 		}
 		
 		return new ResponseEntity<>("파일이 삭제되었습니다.", HttpStatus.OK);

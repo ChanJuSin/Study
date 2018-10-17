@@ -46,7 +46,8 @@ public class SendAuthEmailTest {
 	
 	@Test
 	public void test() throws Exception {
-		userService.keepLogin("ckswn1259@naver.com", "15C2640189A44D6E42CA3F56CE44A75D", new Date());
+		String filePath = "/2018/10/17/feb6b702-8b01-4b2e-b6de-b5114cd67305_space5.jpg";
+		System.out.println(filePath.substring(0, 12) + "s_" + filePath.substring(12));
 	}
 	
 }

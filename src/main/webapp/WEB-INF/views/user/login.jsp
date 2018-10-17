@@ -4,6 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>공부용 게시판 로그인 페이지</title>
+<link rel="stylesheet" href="/resources/css/reset.css">
 <link rel="stylesheet" href="/resources/css/login.css">
 <%@ include file="../include/import.jsp" %>
 <script src="/resources/js/login.js"></script>

@@ -1,5 +1,6 @@
 let emailCheck = false;
 
+// 폼체크
 function checkForm() {
 	if ($("#email").val() === "") {
 		alert("이메일을 입력하세요.");
@@ -19,26 +20,6 @@ function checkForm() {
 	} 
 		
 	return true;
-}
-
-function getFileType(fileName) {
-	let parts = fileName.split(".");
-	return parts[parts.length -1];
-}
-
-function checkFileType(fileName) {
-	let fileType = getFileType(fileName);
-	
-	switch (fileType.toUpperCase()) {
-		case "JPG":
-		case "GIF":
-		case "BMP":
-		case "PNG":
-			
-		return true;
-	}
-	
-	return false;
 }
 
 $(function() {
@@ -71,7 +52,7 @@ $(function() {
 		
 		$.ajax({
 			type: "POST",
-			url: "/upload/uploadFile",
+			url: "/upload/uploadFile?distinction=profile",
 			data: formData,
 			dataType: "text",
 			processData: false,

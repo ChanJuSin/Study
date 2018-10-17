@@ -1,0 +1,4 @@
+@charset "UTF-8";
+
+.board_pagination { display: flex; justify-content: center; }
+.board_write { margin-bottom: 16px; }
