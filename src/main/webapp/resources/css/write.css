@@ -1,0 +1,4 @@
+@charset "UTF-8";
+
+#content { margin-bottom: 15px; }
+.content { width: 1110px; height: 500px; border: 1px solid #ccc; padding: 10px 15px 0 15px; overflow: auto;}

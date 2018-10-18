@@ -12,12 +12,14 @@ import org.imgscalr.Scalr;
 import org.springframework.util.FileCopyUtils;
 
 public class UploadFileUtils {
-
+	
 	// 파일 업로드 후 업로드된 파일명 리턴
 	public static String uploadFile(String uploadPath, String originalName, byte[] fileData) throws Exception {
 		if (!new File(uploadPath).exists()) {
 			new File(uploadPath).mkdirs();
 		}
+		
+		String fileType = originalName.substring(originalName.lastIndexOf(".") + 1);
 		
 		UUID uid = UUID.randomUUID();
 		
@@ -27,10 +29,23 @@ public class UploadFileUtils {
 		File target = new File(uploadPath + savedPath, savedName);
 		FileCopyUtils.copy(fileData, target);
 		
-		String fileType = originalName.substring(originalName.lastIndexOf(".") + 1);
 		String uploadedFileName = null;
+		
 	
 		if (MediaUtils.getMediaType(fileType) != null) {
+			BufferedImage image = ImageIO.read(new File(uploadPath + savedPath, savedName));
+			
+			// 파일의 너비가 1000px이 넘을경우 재조정
+			if (image.getWidth() > 1000 ) {
+				BufferedImage adjustmentImage = Scalr.resize(image, (image.getWidth() / 2), (image.getHeight() / 2));
+				
+				// 기존에 저장되어 있던 이미지 삭제
+				target.delete();
+				
+				// 조정된 이미지 업로드
+				ImageIO.write(adjustmentImage, fileType, target);
+			}
+			
 			uploadedFileName = makeThumbnail(uploadPath, savedPath, savedName);
 		} else {
 			uploadedFileName = makeIcon(uploadPath, savedPath, savedName);

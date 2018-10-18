@@ -1,5 +1,5 @@
 $(function() {
-    function boardImageUpload(el, file) {
+   /* function boardImageUpload(el, file) {
         let formData = new FormData();
         formData.append("file", file);
 
@@ -77,5 +77,5 @@ $(function() {
     	
     	$(".note-editable > p").append(str);
     	$("#writeForm").get(0).submit();
-    });
+    });*/
 });

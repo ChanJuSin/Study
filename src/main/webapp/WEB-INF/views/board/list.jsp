@@ -81,5 +81,9 @@
 	</div>
 </div>
 
+<c:if test="${not empty viewTag }">
+	${viewTag }
+</c:if>
+
 </body>
 </html>
