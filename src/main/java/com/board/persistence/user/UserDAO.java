@@ -1,8 +1,9 @@
-package com.board.persistence;
+package com.board.persistence.user;
 
 import java.util.Map;
 
-import com.board.domain.user.ProfileImg;
+import com.board.domain.board.BoardVO;
+import com.board.domain.user.ProfileImgVO;
 import com.board.domain.user.UserVO;
 import com.board.util.authEmail.AuthEmail;
 
@@ -18,7 +19,7 @@ public interface UserDAO {
 	public void singUp(UserVO userVO) throws Exception;
 	
 	// 프로필 이미지 등록
-	public void profileImgUp(ProfileImg profileImg) throws Exception;
+	public void profileImgUp(ProfileImgVO profileImgVO) throws Exception;
 	
 	// 이메일 인증
 	public void accessAuthEmail(String email) throws Exception;
@@ -27,7 +28,7 @@ public interface UserDAO {
 	public boolean loginProgress(Map<String, String> loginMap) throws Exception;
 	
 	// 프로필 이미지 정보 얻음
-	public ProfileImg getPrfImg(String email) throws Exception;
+	public ProfileImgVO getPrfImg(String email) throws Exception;
 	
 	// 로그인 정보 유지
 	public void keepLoginInfo(Map<String, Object> keppUserInfo) throws Exception;

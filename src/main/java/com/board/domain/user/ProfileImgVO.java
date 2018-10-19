@@ -2,7 +2,7 @@ package com.board.domain.user;
 
 import java.util.Date;
 
-public class ProfileImg {
+public class ProfileImgVO {
 
 	private String email;
 	private String thumbnail_file_path;

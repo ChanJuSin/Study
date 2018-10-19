@@ -1,0 +1,8 @@
+@charset "UTF-8";
+
+.page { border: 1px solid #ccc; padding: 15px; position: relative; margin-bottom: 20px; }
+.profile_box { padding-bottom: 15px; border-bottom: 1px solid #ccc; }
+.profile_box > img { display: inline-block; }
+.profile_box > p { display: inline-block; }
+.page_box { margin-top: 15px; }
+.Attachments > a { position: absolute; right: 35px; top: 86px;] }

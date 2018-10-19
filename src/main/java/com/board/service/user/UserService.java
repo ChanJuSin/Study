@@ -1,8 +1,8 @@
-package com.board.service;
+package com.board.service.user;
 
 import java.util.Date;
 
-import com.board.domain.user.ProfileImg;
+import com.board.domain.user.ProfileImgVO;
 import com.board.domain.user.UserVO;
 
 public interface UserService {
@@ -11,7 +11,7 @@ public interface UserService {
 	public boolean emailCheck(String email) throws Exception;
 
 	// 회원 가입 진행 
-	public void singUp(UserVO userVO, ProfileImg profileImg) throws Exception;
+	public void singUp(UserVO userVO, ProfileImgVO profileImg) throws Exception;
 	
 	// 이메일 인증 
 	public void authEmail(String email) throws Exception;
@@ -20,7 +20,7 @@ public interface UserService {
 	public boolean login(String email, String pw) throws Exception;
 	
 	// 프로필 이미지 정보 가져옴
-	public ProfileImg prfImgInfo(String email) throws Exception;
+	public ProfileImgVO prfImgInfo(String email) throws Exception;
 	
 	// 로그인 유지
 	public void keepLogin(String email, String sessionKey, Date sessionLimit) throws Exception;

@@ -26,29 +26,17 @@
 				            <th scope="col" class="text-center">조회</th>
 				        </tr>
 				    </thead>
-				    <tbody>
-				        <tr>
-				            <th scope="row" class="text-center">1</th>
-				            <td class="text-center">신찬주</td>
-				            <td>안녕하세요</td>
-				            <td class="text-center">2018.10.17 11:10</td>
-				            <td class="text-center">0</td>
-				        </tr>
-				        <tr>
-				            <th scope="row" class="text-center">2</th>
-				            <td class="text-center">홍길동</td>
-				            <td>안녕하세요</td>
-				            <td class="text-center">2018.10.17 11:10</td>
-				            <td class="text-center">1</td>
-				        </tr>
-				         <tr>
-				            <th scope="row" class="text-center">2</th>
-				            <td class="text-center">김필</td>
-				            <td>안녕하세요</td>
-				            <td class="text-center">2018.10.17 11:10</td>
-				            <td class="text-center">3</td>
-				        </tr>
-				    </tbody>
+				<c:forEach items="${list }" var="boardVO">
+					<tbody>
+					    <tr>
+					        <th scope="row" class="text-center">${boardVO.idx }</th>
+					        <td class="text-center">${boardVO.writer }</td>
+					        <td><a href="/board/read?idx=${boardVO.idx }&writer=${boardVO.writer}">${boardVO.title }</a></td>
+					        <td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${boardVO.crea_time }"/></td>
+					        <td class="text-center">${boardVO.views }</td>
+					    </tr>
+					</tbody>
+				</c:forEach>
 				</table>		
 			</div>
 			

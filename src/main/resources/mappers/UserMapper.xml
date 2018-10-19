@@ -30,7 +30,7 @@
 		where email = #{email} and pw = #{pw}
 	</select>
 	
-	<select id="getPrfImg" resultType="ProfileImg">
+	<select id="getPrfImg" resultType="ProfileImgVO">
 		select thumbnail_file_path, crea_time
 		from tbl_user_prf
 		where email = #{email}

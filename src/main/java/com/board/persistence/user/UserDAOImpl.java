@@ -1,4 +1,4 @@
-package com.board.persistence;
+package com.board.persistence.user;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.board.domain.user.ProfileImg;
+import com.board.domain.user.ProfileImgVO;
 import com.board.domain.user.UserVO;
 import com.board.util.authEmail.AuthEmail;
 import com.board.util.authEmail.SendAuthEmail;
@@ -48,8 +48,8 @@ public class UserDAOImpl implements UserDAO {
 	
 	// 프로필 이미지 등록
 	@Override
-	public void profileImgUp(ProfileImg profileImg) throws Exception {
-		sqlSession.insert(namespace + ".profileImgUp", profileImg);
+	public void profileImgUp(ProfileImgVO profileImgVO) throws Exception {
+		sqlSession.insert(namespace + ".profileImgUp", profileImgVO);
 	}
 
 	// 이메일 인증
@@ -72,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
 
 	// 프로필 이미지 정보 얻음
 	@Override
-	public ProfileImg getPrfImg(String email) throws Exception {
+	public ProfileImgVO getPrfImg(String email) throws Exception {
 		return sqlSession.selectOne(namespace + ".getPrfImg", email);
 	}
 	
