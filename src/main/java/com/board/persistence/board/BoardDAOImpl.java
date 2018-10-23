@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.board.domain.board.BoardFileVO;
+import com.board.domain.board.BoardImageVO;
 import com.board.domain.board.BoardVO;
 
 @Repository
@@ -21,6 +22,11 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void register(BoardVO board) throws Exception {
 		sqlSession.insert(namespace + ".register", board);
+	}
+	
+	@Override
+	public int getPageIdx() throws Exception {
+		return sqlSession.selectOne(namespace + ".getPageIdx");
 	}
 
 	@Override
@@ -46,6 +52,11 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public List<BoardFileVO> getFile(Map<String, Object> getFileInfo) throws Exception {
 		return sqlSession.selectList(namespace + ".getFile", getFileInfo);
+	}
+
+	@Override
+	public BoardImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception {
+		return sqlSession.selectOne(namespace + ".getProfileImage", getImageInfo);
 	}
 
 }

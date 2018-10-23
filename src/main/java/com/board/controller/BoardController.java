@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.board.BoardVO;
+import com.board.domain.user.UserVO;
 import com.board.service.board.BoardService;
 import com.board.util.upload.UploadFileUtils;
 
@@ -44,10 +46,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
-	public String writePost(BoardVO board, String[] images, MultipartFile[] files, RedirectAttributes rttr) throws Exception {
-		logger.info("writer : " + board.getWriter());
-		logger.info("title : " + board.getTitle());
-		logger.info("content : " + board.getContent());
+	public String writePost(BoardVO boardVO, String[] images, MultipartFile[] files, RedirectAttributes rttr) throws Exception {
+		logger.info("writer : " + boardVO.getWriter());
+		logger.info("title : " + boardVO.getTitle());
+		logger.info("content : " + boardVO.getContent());
+		logger.info("user_idx : " + boardVO.getUser_idx());
 		
 		List<String> boardFilePathList = new ArrayList<>();
 		
@@ -63,14 +66,14 @@ public class BoardController {
 			}
 		}
 		
-		boardService.write(board, images, boardFilePathList);
+		boardService.write(boardVO, images, boardFilePathList);
 		
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public void read(int idx, String writer, Model model) throws Exception {
-		model.addAttribute("pageInfo", boardService.read(idx, writer));
+	public void read(int idx, int user_idx, String writer, Model model) throws Exception {
+		model.addAttribute("pageInfo", boardService.read(idx, user_idx, writer));
 		model.addAttribute("page", "board");
 	}
 	

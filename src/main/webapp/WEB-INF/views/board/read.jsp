@@ -15,34 +15,32 @@
 	<%@ include file="../include/header.jsp" %>
 	
 	<div class="container">
-		<div class="page">
-			<div class="profile_box">
-				<img width="100px" height="100px"/>
+		<main class="read-page">
+			<section class="read-page_header">
+				<div class="read-page_info">
+					<img src="/upload/displayFile?filePath=${pageInfo.boardImageVO.thumbnail_file_path }&distinction=profile" />
+					<div class="read-page_user-info">
+						<a href="#"><p>${pageInfo.boardVO.writer }</p></a>
+						<span><fmt:formatDate value="${pageInfo.boardVO.crea_time }" pattern="yyyy-MM-dd hh:mm:dd"/></span>
+					</div>
+				</div>
 				
-				<a href="#" class="user_name">서브웨이</a>
-				<p>2018-10-19 15:24</p>
-			</div>
+				<div class="read-page_attachments">
+					<input type="button" value="첨부파일(${fn:length(pageInfo.boardFileVO )})" />
+				</div>
+			</section>
 			
-			<div class="page_box">
-				<div class="page_header">
-					<p class="page_idx">7</p>
-					<p class="page_title">테스트용 게시글 입니다.</p>
-					
-					<div class="Attachments">
-						<c:forEach items="${pageInfo.fileInfo }" var="file">
-							<c:set value="${fn:length(file.board_file_path)}" var="board_file_path_last" />
-							<a href="#">${fn:substring(file.board_file_path, 50, board_file_path_last)}</a>
-						</c:forEach>
-					</div>
+			<section class="read-page_body">
+				<div class="read-page_title">
+					<p>#${pageInfo.boardVO.idx }</p>
+					<h3>테스트용 게시글 입니다.</h3>
 				</div>
 				
-				<div class="page_body">
-					<div class="page_content">
-						${pageInfo.boardVO.content }
-					</div>
+				<div class="read-page_content">
+					${pageInfo.boardVO.content }
 				</div>
-			</div>
-		</div>
+			</section>
+		</main>
 	</div>
 </div>
 

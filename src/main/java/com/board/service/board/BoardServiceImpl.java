@@ -24,6 +24,8 @@ public class BoardServiceImpl implements BoardService {
 		
 		Map<String, Object> fileMap = new HashMap<>();
 		fileMap.put("writer", boardVO.getWriter());
+		fileMap.put("board_idx", boardDAO.getPageIdx());
+		fileMap.put("user_idx", boardVO.getIdx());
 		
 		if (images != null) {
 			for (String image : images) {
@@ -46,14 +48,16 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Map<String, Object> read(int idx, String writer) throws Exception {
+	public Map<String, Object> read(int idx, int user_idx, String writer) throws Exception {
 		Map<String, Object> infoMap = new HashMap<>();
 		infoMap.put("idx", idx);
+		infoMap.put("user_idx", user_idx);
 		infoMap.put("writer", writer);
 		
 		Map<String, Object> pageInfo = new HashMap<>();
 		pageInfo.put("boardVO", boardDAO.getPage(infoMap));
-		pageInfo.put("fileInfo", boardDAO.getFile(infoMap));
+		pageInfo.put("boardFileVO", boardDAO.getFile(infoMap));
+		pageInfo.put("boardImageVO", boardDAO.getProfileImage(infoMap));
 		
 		return pageInfo;
 	}

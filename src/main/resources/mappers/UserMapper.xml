@@ -16,8 +16,8 @@
 	</insert>
 	
 	<insert id="profileImgUp">
-		insert into tbl_user_prf (email, thumbnail_file_path)
-		values (#{email}, #{thumbnail_file_path})
+		insert into tbl_user_prf (email, user_idx, thumbnail_file_path)
+		values (#{email}, last_insert_id(), #{thumbnail_file_path})
 	</insert>
 	
 	<update id="accessAuthEmail">
@@ -42,12 +42,13 @@
 	</insert>
 	
 	<select id="getKeepLoginInfo" resultType="UserVO">
-		select email, name from tbl_user 
+		select idx, email, pw, name, auth_wt, session_key, session_limit, crea_time
+		from tbl_user 
 		where session_key = #{sessinKey} and session_limit > now()
 	</select>
 	
 	<select id="getUserInfo" resultType="UserVO">
-		select email, pw, name, auth_wt
+		select idx, email, pw, name, auth_wt, session_key, session_limit crea_time
 		from tbl_user
 		where email = #{email}
 	</select>

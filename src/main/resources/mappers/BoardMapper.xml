@@ -6,22 +6,26 @@
 <mapper namespace="com.board.mapper.BoardMapper">
 
 	<insert id="register">
-		insert into tbl_board (writer, title, content) 
-		values (#{writer}, #{title}, #{content})
+		insert into tbl_board (user_idx, writer, title, content) 
+		values (#{user_idx}, #{writer}, #{title}, #{content})
 	</insert>
+	
+	<select id="getPageIdx" resultType="int">
+		select last_insert_id()
+	</select>
 	
 	<insert id="imageRegister">
 		insert into tbl_board_image_file (writer, board_image_file_path, board_idx)
-		values (#{writer}, #{boardImageFilePath}, last_insert_id())
+		values (#{writer}, #{boardImageFilePath}, #{board_idx})
 	</insert>
 	
 	<insert id="fileRegister">
 		insert into tbl_board_file (writer, board_file_path, board_idx)
-		value (#{writer}, #{boardFilePath}, last_insert_id())
+		value (#{writer}, #{boardFilePath}, #{board_idx})
 	</insert>
 	
 	<select id="getList" resultType="BoardVO">
-		select idx, writer, title, content, views, crea_time
+		select idx, user_idx, writer, title, content, views, crea_time
 		from tbl_board
 		order by idx desc
 	</select>
@@ -36,6 +40,12 @@
 		select board_file_path
 		from tbl_board_file
 		where board_idx = #{idx} and writer = #{writer}
+	</select>
+	
+	<select id="getProfileImage" resultType="BoardImageVO">
+		select thumbnail_file_path
+		from tbl_user_prf
+		where user_idx = #{user_idx}
 	</select>
 
 </mapper>

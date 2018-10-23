@@ -4,13 +4,21 @@ import java.util.Date;
 
 public class UserVO {
 
+	private int idx;
 	private String email;
 	private String pw;
 	private String name;
 	private boolean auth_wt;
 	private String session_key;
 	private Date session_limit;
+	private Date crea_time;
 	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -47,11 +55,18 @@ public class UserVO {
 	public void setSession_limit(Date session_limit) {
 		this.session_limit = session_limit;
 	}
+	public Date getCrea_time() {
+		return crea_time;
+	}
+	public void setCrea_time(Date crea_time) {
+		this.crea_time = crea_time;
+	}
 	
 	@Override
 	public String toString() {
-		return "UserVO [email=" + email + ", pw=" + pw + ", name=" + name + ", auth_wt=" + auth_wt + ", session_key="
-				+ session_key + ", session_limit=" + session_limit + "]";
+		return "UserVO [idx=" + idx + ", email=" + email + ", pw=" + pw + ", name=" + name + ", auth_wt=" + auth_wt
+				+ ", session_key=" + session_key + ", session_limit=" + session_limit + ", crea_time=" + crea_time
+				+ "]";
 	}
-	
+
 }

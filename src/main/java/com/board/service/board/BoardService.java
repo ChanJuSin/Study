@@ -14,6 +14,6 @@ public interface BoardService {
 	public List<BoardVO> list() throws Exception;
 	
 	// 게시글 상세페이지
-	public Map<String, Object> read(int idx, String writer) throws Exception;
+	public Map<String, Object> read(int idx, int user_idx, String writer) throws Exception;
 	
 }

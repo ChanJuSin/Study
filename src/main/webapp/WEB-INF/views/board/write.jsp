@@ -41,6 +41,8 @@
 					<input type="button" id="delFileForm" value="파일 폼 삭제" />
 				</div>
 				
+				<input type="hidden" name="user_idx" value="${loginInfo.idx }" />
+				
 				<input type="submit" value="글작성" class="btn btn-sm" />
 			</form>	
 		</div>
