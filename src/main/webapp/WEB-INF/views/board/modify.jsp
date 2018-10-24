@@ -1,3 +1,5 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -33,26 +35,27 @@
 				<div class="form-group">
 					<label>내용 (이미지 파일은 Drag & Drop 형식으로 등록가능합니다.)</label>
 					<div class="content" contentEditable="true">${pageInfo.boardVO.content }</div>
-					<div class="modify-page_attachments">
-						<input type="hidden" class="target_attachments_length" value="${fn:length(pageInfo.boardFileVO )}" />
-						<input type="button" class="attachments_length" value="첨부파일(${fn:length(pageInfo.boardFileVO )})" />
-						<div class="modify-page_attachments-items">
-						    <div class="modify-page_attachments-items_title">
-						        <span>첨부파일 목록</span>
-						        <input type="button" value="x" class="modify-page_attachments-itmes_close btn btn-sm" />
-						    </div>
-						    <c:forEach items="${pageInfo.boardFileVO }" var="boardFileVO">
-						        <c:set var="file_path" value="${fn:length(boardFileVO.board_file_path) }" />
-						        <div class="modify-page_attachments-item">
-						            <i class="fa fa-file-o"></i>
-						            <span class="modify-page_attachment-name">${fn:substring(boardFileVO.board_file_path, 49, file_path) }</span>
-						            <%-- <a href="/board/modifyDeleteFile?filePath=${boardFileVO.board_file_path }">삭제</a> --%>
-						            <input type="hidden" value="${boardFileVO.board_file_path }" />
-						            <input type="button" value="삭제" class="deleteFile btn btn-sm" />
-						        </div>
-						    </c:forEach>
-						</div>						
-					</div>			
+					<c:if test="${not empty pageInfo.boardFileVO }">
+						<div class="modify-page_attachments">
+							<input type="hidden" class="target_attachments_length" value="${fn:length(pageInfo.boardFileVO )}" />
+							<input type="button" class="attachments_length" value="첨부파일(${fn:length(pageInfo.boardFileVO )})" />
+							<div class="modify-page_attachments-items">
+							    <div class="modify-page_attachments-items_title">
+							        <span>첨부파일 목록</span>
+							        <input type="button" value="x" class="modify-page_attachments-itmes_close btn btn-sm" />
+							    </div>
+							    <c:forEach items="${pageInfo.boardFileVO }" var="boardFileVO">
+							        <c:set var="file_path" value="${fn:length(boardFileVO.board_file_path) }" />
+							        <div class="modify-page_attachments-item">
+							            <i class="fa fa-file-o"></i>
+							            <span class="modify-page_attachment-name">${fn:substring(boardFileVO.board_file_path, 49, file_path) }</span>
+							            <input type="hidden" value="${boardFileVO.board_file_path }" />
+							            <input type="button" value="삭제" class="deleteFile btn btn-sm" />
+							        </div>
+							    </c:forEach>
+							</div>						
+						</div>			
+					</c:if>
 					<input type="hidden" name="content" id="content" />
 				</div> 
 				
@@ -70,6 +73,31 @@
 		</div>
 	</div>
 </div>
+
+<c:if test="${not empty pageInfo.boardImageVO }">
+	<% 
+		List<String> imageFilePaths = new ArrayList<>();
+	%>
+	<c:forEach items="${pageInfo.boardImageVO }" var="boardImageVO" varStatus="status">
+		<c:set var="imageFilePath" value="${boardImageVO.board_image_file_path }" />
+		<%
+			imageFilePaths.add(pageContext.getAttribute("imageFilePath").toString());
+		%>
+		<c:if test="${status.last }">
+			<%
+				pageContext.setAttribute("imageFilePaths", imageFilePaths);
+			%>
+			<script>
+				let imageFilePaths = "${imageFilePaths}";
+				imageFilePaths = imageFilePaths.replace("[", "");
+				imageFilePaths = imageFilePaths.replace("]", "");
+				imageFilePaths = imageFilePaths.split(",");
+				addImageTag(imageFilePaths);
+			</script>
+		</c:if>
+	</c:forEach>
+</c:if> 
+
 
 </body>
 </html>

@@ -86,7 +86,6 @@ public class BoardController {
 	public String delete(int board_idx, int user_idx, String writer, @RequestParam(value="images" ,required=false, defaultValue="") String[] images,
 	@RequestParam(value="files", required=false, defaultValue="") String[] files) throws Exception {
 		boardService.delete(board_idx, user_idx, writer, images, files, boardImgUploadPath, boardFileUploadPath);
-		
 		return "redirect:/";
 	}
 	
