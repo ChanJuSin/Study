@@ -16,4 +16,10 @@ public interface BoardService {
 	// 게시글 상세페이지
 	public Map<String, Object> read(int idx, int user_idx, String writer) throws Exception;
 	
+	// 게시글 삭제
+	public void delete(int board_idx, int user_idx, String writer, String[] images, String[] files, String boardImgUploadPath, String boardFileUploadPath) throws Exception;
+	
+	// 게시글 수정시 파일 삭제
+	public void modifyDeleteFile(int idx, String writer, String filePath) throws Exception;
+	
 }

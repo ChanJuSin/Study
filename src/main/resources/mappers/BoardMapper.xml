@@ -31,7 +31,7 @@
 	</select>
 	
 	<select id="getPage" resultType="BoardVO">
-		select idx, writer, title, content, views, crea_time 
+		select idx, user_idx, writer, title, content, views, crea_time 
 		from tbl_board
 		where idx = #{idx} and writer = #{writer}
 	</select>
@@ -42,10 +42,36 @@
 		where board_idx = #{idx} and writer = #{writer}
 	</select>
 	
-	<select id="getProfileImage" resultType="BoardImageVO">
+	<select id="getProfileImage" resultType="BoardProfileImageVO">
 		select thumbnail_file_path
 		from tbl_user_prf
 		where user_idx = #{user_idx}
 	</select>
+
+	<select id="getImages" resultType="BoardImageVO">
+		select board_image_file_path
+		from tbl_board_image_file
+		where board_idx = #{idx} and writer = #{writer}
+	</select>
+	
+	<delete id="deleteBoard">
+		delete from tbl_board
+		where idx = #{board_idx} and user_idx = #{user_idx} and writer = #{writer}
+	</delete>
+	
+	<delete id="deleteBoardFile">
+		delete from tbl_board_file
+		where board_idx = #{board_idx} and writer = #{writer}
+	</delete>
+	
+	<delete id="deleteBoardImage">
+		delete from tbl_board_image_file
+		where board_idx = #{board_idx} and writer = #{writer}
+	</delete>
+	
+	<delete id="modifyDeleteFile">
+		delete from tbl_board_file
+		where board_idx = #{board_idx} and writer = #{writer} and board_file_path = #{filePath}
+	</delete>
 
 </mapper>

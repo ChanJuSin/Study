@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
+import com.board.domain.board.BoardProfileImageVO;
 import com.board.domain.board.BoardVO;
 
 @Repository
@@ -55,8 +56,33 @@ public class BoardDAOImpl implements BoardDAO {
 	}
 
 	@Override
-	public BoardImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception {
+	public BoardProfileImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception {
 		return sqlSession.selectOne(namespace + ".getProfileImage", getImageInfo);
+	}
+
+	@Override
+	public List<BoardImageVO> getImages(Map<String, Object> getImagesInfo) throws Exception {
+		return sqlSession.selectList(namespace + ".getImages", getImagesInfo);
+	}
+
+	@Override
+	public void deleteBoard(Map<String, Object> deleteBoardInfo) throws Exception {
+		sqlSession.delete(namespace + ".deleteBoard", deleteBoardInfo);
+	}
+
+	@Override
+	public void deleteBoardFile(Map<String, Object> deleteBoardFileInfo) throws Exception {
+		sqlSession.delete(namespace + ".deleteBoardFile", deleteBoardFileInfo);
+	}
+
+	@Override
+	public void deleteBoardImage(Map<String, Object> deleteBoardImageInfo) throws Exception {
+		sqlSession.delete(namespace + ".deleteBoardImage", deleteBoardImageInfo);
+	}
+
+	@Override
+	public void modifyDeleteFile(Map<String, Object> deleteFileInfo) throws Exception {
+		sqlSession.delete(namespace + ".modifyDeleteFile", deleteFileInfo);
 	}
 
 }

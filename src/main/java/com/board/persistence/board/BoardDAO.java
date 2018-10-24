@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
+import com.board.domain.board.BoardProfileImageVO;
 import com.board.domain.board.BoardVO;
 
 public interface BoardDAO {
@@ -31,6 +32,21 @@ public interface BoardDAO {
 	public List<BoardFileVO> getFile(Map<String, Object> getFileInfo) throws Exception;
 	
 	// 게시글 작성자 프로필 이미지 정보 얻음
-	public BoardImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception;
+	public BoardProfileImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception;
+	
+	// 게시글 이미지 리스트 얻음
+	public List<BoardImageVO> getImages(Map<String, Object> getImagesInfo) throws Exception;
+	
+	// 게시글 삭제
+	public void deleteBoard(Map<String, Object> deleteBoardInfo) throws Exception;
+	
+	// 게시글 파일 삭제
+	public void deleteBoardFile(Map<String, Object> deleteBoardFileInfo) throws Exception;
+	
+	// 게시글 이미지 삭제
+	public void deleteBoardImage(Map<String, Object> deleteBoardImageInfo) throws Exception;
+	
+	// 게시글 수정시 파일 삭제
+	public void modifyDeleteFile(Map<String, Object> deleteFileInfo) throws Exception;
 	
 }

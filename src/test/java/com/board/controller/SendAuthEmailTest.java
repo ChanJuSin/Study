@@ -1,8 +1,5 @@
 package com.board.controller;
 
-import java.io.File;
-import java.util.Date;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.board.service.user.UserService;
-import com.board.util.authEmail.AuthEmail;
 import com.board.util.authEmail.SendAuthEmail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,8 +42,8 @@ public class SendAuthEmailTest {
 	
 	@Test
 	public void test() throws Exception {
-		String filePath = "/2018/10/17/feb6b702-8b01-4b2e-b6de-b5114cd67305_space5.jpg";
-		System.out.println(filePath.substring(0, 12) + "s_" + filePath.substring(12));
+		String test = "/2018/10/24/9cac299a-2438-4e49-8e81-73f85ad46483_21208_신찬주_우수작.pptx";
+		System.out.println(test.substring(49));
 	}
 	
 }

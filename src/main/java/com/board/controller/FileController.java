@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.util.upload.DeleteFile;
 import com.board.util.upload.MediaUtils;
 import com.board.util.upload.UploadFileUtils;
 
@@ -31,6 +32,9 @@ public class FileController {
 	
 	@Resource(name = "boardImgUploadPath")
 	private String boardImgUploadPath;
+	
+	@Resource(name = "boardFileUploadPath")
+	private String boardFileUploadPath;
 
 	// 파일 업로드 컨트롤러
 	@ResponseBody
@@ -49,6 +53,8 @@ public class FileController {
 	public ResponseEntity<byte[]> displayFile(@RequestParam(required=false, defaultValue="/default/defaultImg.jpg") String filePath, String distinction) throws Exception {
 		ResponseEntity<byte[]> entity = null;
 		
+		String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
+		
 		if (distinction.equals("profile")) {
 			if (filePath.equals("/default/defaultImg.jpg")) {
 				entity = displayDefaultImg(profileImgUploadPath, filePath.replace('/', File.separatorChar));
@@ -56,7 +62,11 @@ public class FileController {
 				entity = displayFileProcess(profileImgUploadPath, filePath.replace('/', File.separatorChar));
 			}
 		} else {
-			entity = displayFileProcess(boardImgUploadPath, filePath.replace('/', File.separatorChar));
+			if (MediaUtils.getMediaType(fileType) != null) {
+				entity = displayFileProcess(boardImgUploadPath, filePath.replace('/', File.separatorChar));	
+			} else {
+				entity = displayFileProcess(boardFileUploadPath, filePath.replace('/', File.separatorChar));
+			}
 		} 
 		
 		return entity;
@@ -110,18 +120,14 @@ public class FileController {
 		filePath = filePath.replace('/', File.separatorChar);
 		
 		if (distinction.equals("profile")) {
-			if (MediaUtils.getMediaType(fileType) != null) {
-				new File(profileImgUploadPath + filePath).delete();
-				new File(profileImgUploadPath + filePath.substring(0, 12) + filePath.substring(14)).delete();
-			} else {
-				
-			}
+			DeleteFile.deleteFile(profileImgUploadPath, filePath);
+			DeleteFile.deleteFile(profileImgUploadPath, filePath.substring(0, 12) + filePath.substring(14));
 		} else {
 			if (MediaUtils.getMediaType(fileType) != null) {
-				new File(boardImgUploadPath + filePath).delete();
-				new File(boardImgUploadPath + filePath.substring(0, 12) + "s_" + filePath.substring(12)).delete();
+				DeleteFile.deleteFile(boardImgUploadPath, filePath);
+				DeleteFile.deleteFile(boardImgUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
 			} else {
-				
+				DeleteFile.deleteFile(boardFileUploadPath, filePath);
 			}
 		}
 		

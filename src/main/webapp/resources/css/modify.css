@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.modify-page_attachments {
+	margin-top: 15px;
+}
+
+.modify-page_attachments .modify-page_attachments-items {
+	margin-top: 5px;
+	border: 1px solid #b6b6b6;
+	padding: 5px;
+	position: absolute;
+	background-color: white;
+	display: none;
+}
+
+.modify-page_attachments-items .modify-page_attachments-item {
+	padding-bottom: 3px;
+}
+
+.modify-page_attachments-item .modify-page_attachment-name {
+	margin-right: 3px;
+}
