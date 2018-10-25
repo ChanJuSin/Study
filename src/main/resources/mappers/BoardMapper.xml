@@ -71,7 +71,18 @@
 	
 	<delete id="modifyDeleteFile">
 		delete from tbl_board_file
-		where board_idx = #{board_idx} and writer = #{writer} and board_file_path = #{filePath}
+		where board_idx = #{board_idx} and writer = #{writer} and board_file_path = #{boardFilePath}
 	</delete>
+	
+	<delete id="modifyDeleteImage">
+		delete from tbl_board_image_file 
+		where board_idx = #{board_idx} and writer = #{writer} and board_image_file_path = #{boardImageFilePath}
+	</delete>
+	
+	<update id="modify">
+		update tbl_board 
+		set title = #{title}, content = #{content}
+		where idx = #{board_idx} and user_idx = #{user_idx} and writer = #{writer}
+	</update>
 
 </mapper>

@@ -7,10 +7,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.board.BoardVO;
 import com.board.persistence.board.BoardDAO;
 import com.board.util.upload.DeleteFile;
+import com.board.util.upload.UploadFileUtils;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -75,7 +77,7 @@ public class BoardServiceImpl implements BoardService {
 		
 		boardDAO.deleteBoard(deleteInfoMap);
 		
-		if (images.length != 0) {
+		if (images.length > 0) {
 			for (String image: images) {
 				DeleteFile.deleteFile(boardImgUploadPath, image);
 				DeleteFile.deleteFile(boardImgUploadPath, image.substring(0, 12) + "s_" + image.substring(12));
@@ -83,7 +85,7 @@ public class BoardServiceImpl implements BoardService {
 			boardDAO.deleteBoardFile(deleteInfoMap);
 		} 
 		
-		if (files.length != 0) {
+		if (files.length > 0) {
 			for (String file: files) {
 				DeleteFile.deleteFile(boardFileUploadPath, file);
 			}
@@ -96,9 +98,50 @@ public class BoardServiceImpl implements BoardService {
 		Map<String, Object> deleteFileInfo = new HashMap<>();
 		deleteFileInfo.put("board_idx", idx);
 		deleteFileInfo.put("writer", writer);
-		deleteFileInfo.put("filePath", filePath);
+		deleteFileInfo.put("boardFilePath", filePath);
 		
 		boardDAO.modifyDeleteFile(deleteFileInfo);
+	}
+
+	@Override
+	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files,
+			String[] addImages, String[] deleteImages, String boardImageUploadPath, String boardFileUploadPath) throws Exception {
+		Map<String, Object> modifyInfo = new HashMap<>();
+		modifyInfo.put("board_idx", idx);
+		modifyInfo.put("user_idx", user_idx);
+		modifyInfo.put("writer", writer);
+		modifyInfo.put("title", title);
+		modifyInfo.put("content", content);
+
+		if (deleteImages.length > 0) {
+			for (String deleteImage: deleteImages) {
+				String filePath = deleteImage.split("\\.")[0] + "." + deleteImage.split("\\.")[1].substring(0, 3);
+				DeleteFile.deleteFile(boardImageUploadPath, filePath);
+				DeleteFile.deleteFile(boardImageUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
+				modifyInfo.put("boardImageFilePath", filePath);
+				boardDAO.modifyDeleteImage(modifyInfo);
+			}
+		}
+		
+		if (addImages.length > 0) {
+			for (String addImage: addImages) {
+				String filePath = addImage.split("\\.")[0] + "." + addImage.split("\\.")[1].substring(0, 3);
+				modifyInfo.put("boardImageFilePath", filePath);
+				boardDAO.imageRegister(modifyInfo);
+			}
+		}
+		
+		if (files.length > 0) {
+			for (MultipartFile file: files) {
+				if (file.getSize() > 0) {
+					String filePath = UploadFileUtils.uploadFile(boardFileUploadPath, file.getOriginalFilename(), file.getBytes());
+					modifyInfo.put("boardFilePath", filePath);
+					boardDAO.fileRegister(modifyInfo);
+				}
+			}
+		}
+		
+		boardDAO.modify(modifyInfo);
 	}
 
 }

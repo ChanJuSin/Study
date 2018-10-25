@@ -1,15 +1,20 @@
 package com.board.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +68,7 @@ public class BoardController {
 				logger.info("" + file.getSize());
 				logger.info("" + file.getContentType());
 				
-				if (file.getSize() != 0) {
+				if (file.getSize() > 0) {
 					String boardFilePath = UploadFileUtils.uploadFile(boardFileUploadPath, file.getOriginalFilename(), file.getBytes());
 					
 					boardFilePathList.add(boardFilePath);
@@ -90,7 +95,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
-	public void modifyGET(int idx, int user_idx, String writer, Model model) throws Exception {
+	public void modifyGET(int idx, int user_idx, String writer, Model model, ModelMap modelMap) throws Exception {
 		model.addAttribute("pageInfo", boardService.read(idx, user_idx, writer));
 		model.addAttribute("page", "board");
 	}
@@ -101,6 +106,13 @@ public class BoardController {
 		DeleteFile.deleteFile(boardFileUploadPath, filePath);
 		boardService.modifyDeleteFile(idx, writer, filePath);
 		return "1";
+	}
+	
+	@RequestMapping(value = "/modify", method = RequestMethod.POST) 
+	public String modifyPOST(int idx, int user_idx, String writer, String title,  String content, MultipartFile[] files, @RequestParam(value="addImages", required=false, defaultValue="") String[] addImages,
+	@RequestParam(value="deleteImages", required=false, defaultValue="") String[] deleteImages) throws Exception {
+		boardService.modify(idx, user_idx, writer, title, content, files, addImages, deleteImages, boardImgUploadPath, boardFileUploadPath);
+		return "redirect:/";
 	}
 	
 }

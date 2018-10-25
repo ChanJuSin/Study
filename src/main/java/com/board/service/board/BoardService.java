@@ -3,6 +3,8 @@ package com.board.service.board;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.board.domain.board.BoardVO;
 
 public interface BoardService {
@@ -21,5 +23,8 @@ public interface BoardService {
 	
 	// 게시글 수정시 파일 삭제
 	public void modifyDeleteFile(int idx, String writer, String filePath) throws Exception;
+	
+	// 게시글 수정
+	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files, String[] addImages, String[] deleteImages, String boardImageUploadPath, String boardFileUploadPath) throws Exception;
 	
 }

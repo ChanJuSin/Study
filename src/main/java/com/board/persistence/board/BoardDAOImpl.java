@@ -85,4 +85,14 @@ public class BoardDAOImpl implements BoardDAO {
 		sqlSession.delete(namespace + ".modifyDeleteFile", deleteFileInfo);
 	}
 
+	@Override
+	public void modifyDeleteImage(Map<String, Object> deleteImageInfo) throws Exception {
+		sqlSession.delete(namespace + ".modifyDeleteImage", deleteImageInfo);
+	}
+
+	@Override
+	public void modify(Map<String, Object> modifyInfo) throws Exception {
+		sqlSession.update(namespace + ".modify", modifyInfo);
+	}
+
 }

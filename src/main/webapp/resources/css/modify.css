@@ -20,3 +20,11 @@
 .modify-page_attachments-item .modify-page_attachment-name {
 	margin-right: 3px;
 }
+
+.deleteImageList {
+	display: none;
+}
+
+.addImageList {
+	display: none;
+}

@@ -45,6 +45,7 @@
 	<beans:bean id="loginAuthInterceptor" class="com.board.interceptor.LoginAuthInterceptor" />
 	<beans:bean id="keepLoginAuthInterceptor" class="com.board.interceptor.KeppLoginAuthInterceptor" />
 	<beans:bean id="loginAuthWhetherInterceptor" class="com.board.interceptor.LoginAuthWhetherInterceptor" />
+	<beans:bean id="boardWriterAuthInterceptor" class="com.board.interceptor.BoardWriterAuthInterceptor" />
 	
 	<interceptors>
 		<interceptor>
@@ -66,6 +67,11 @@
 		<interceptor>
 			<mapping path="/board/write" />
 			<beans:ref bean="loginAuthWhetherInterceptor" />
+		</interceptor>
+		
+		<interceptor>
+			<mapping path="/board/modify" />
+			<beans:ref bean="boardWriterAuthInterceptor" />
 		</interceptor>
 	</interceptors>
 	

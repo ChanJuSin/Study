@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="/resources/css/modify.css">
 <%@ include file="../include/import.jsp" %>
 <script src="/resources/js/fileCheck.js"></script>
-<script src="/resources/js/write.js"></script>
 <script src="/resources/js/modify.js"></script>
 </head>
 <body>
@@ -21,7 +20,7 @@
 	
 	<div class="container">
 		<div class="writeForm">
-			<form id="writeForm" action="/board/write" method="post" enctype="multipart/form-data" id="writeForm">
+			<form id="modifyForm" action="/board/modify" method="post" enctype="multipart/form-data" id="writeForm">
 				<div class="form-group">
 			        <label for="writer">작성자</label>
 			        <input type="text" class="form-control" id="writer" value="${pageInfo.boardVO.writer }" name="writer" readonly />
@@ -65,10 +64,14 @@
 					<input type="button" id="delFileForm" value="파일 폼 삭제" />
 				</div>
 				
-				<input type="hidden" id="idx" value="${pageInfo.boardVO.idx }" />
-				<input type="hidden" name="user_idx" value="${loginInfo.idx }" />
+				<div class="deleteImageList"></div>
 				
-				<input type="submit" value="글작성" class="btn btn-sm" />
+				<div class="addImageList"></div>
+				
+				<input type="hidden" id="idx" name="idx" value="${pageInfo.boardVO.idx }" />
+				<input type="hidden" id="user_idx" name="user_idx" value="${loginInfo.idx }" />
+				
+				<input type="submit" value="글수정" class="modifyBtn btn btn-sm" />
 			</form>	
 		</div>
 	</div>

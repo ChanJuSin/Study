@@ -49,4 +49,10 @@ public interface BoardDAO {
 	// 게시글 수정시 파일 삭제
 	public void modifyDeleteFile(Map<String, Object> deleteFileInfo) throws Exception;
 	
+	// 게시글 수정시 이미지 삭제
+	public void modifyDeleteImage(Map<String, Object> deleteImageInfo) throws Exception;
+	
+	// 게시글 수정
+	public void modify(Map<String, Object> modifyInfo) throws Exception;
+	
 }

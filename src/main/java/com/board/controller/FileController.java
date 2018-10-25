@@ -120,13 +120,16 @@ public class FileController {
 		filePath = filePath.replace('/', File.separatorChar);
 		
 		if (distinction.equals("profile")) {
+			// 프로필 이미지 삭제
 			DeleteFile.deleteFile(profileImgUploadPath, filePath);
 			DeleteFile.deleteFile(profileImgUploadPath, filePath.substring(0, 12) + filePath.substring(14));
 		} else {
 			if (MediaUtils.getMediaType(fileType) != null) {
+				// 게시글 이미지 삭제
 				DeleteFile.deleteFile(boardImgUploadPath, filePath);
 				DeleteFile.deleteFile(boardImgUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
 			} else {
+				// 게시글 파일 삭제
 				DeleteFile.deleteFile(boardFileUploadPath, filePath);
 			}
 		}

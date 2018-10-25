@@ -42,8 +42,10 @@ public class SendAuthEmailTest {
 	
 	@Test
 	public void test() throws Exception {
-		String test = "/2018/10/24/9cac299a-2438-4e49-8e81-73f85ad46483_21208_신찬주_우수작.pptx";
-		System.out.println(test.substring(49));
+		String test = "/2018/10/25/30bcba4e-fb43-4992-bb93-e88df171ab89_dog.gif/";
+		String[] list = test.split("\\.");
+		
+		System.out.println(list[0] + "." + list[1].substring(0, 3));
 	}
 	
 }

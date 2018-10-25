@@ -132,7 +132,7 @@ $(function() {
 	writeFormSubmit();
 	
 	// 이미지 삭제 
-	$(".content").on("click", "a", function(event) {
+	$(".content").on("click", "a", function() {
 		let currentTag = $(this);
 		let prevTag = currentTag.prev();
 		
