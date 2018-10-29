@@ -3,13 +3,13 @@ package com.board.persistence.user;
 import java.util.Map;
 
 import com.board.domain.board.BoardVO;
-import com.board.domain.user.ProfileImgVO;
+import com.board.domain.user.ProfileImageVO;
 import com.board.domain.user.UserVO;
 import com.board.util.authEmail.AuthEmail;
 
 public interface UserDAO {
 
-	// 회원가입 여부 체크
+	// 이메일 중복 체크
 	public boolean singUpCheck(String email) throws Exception;
 	
 	// 이메일 인증코드 발송
@@ -19,7 +19,7 @@ public interface UserDAO {
 	public void singUp(UserVO userVO) throws Exception;
 	
 	// 프로필 이미지 등록
-	public void profileImgUp(ProfileImgVO profileImgVO) throws Exception;
+	public void profileImageRegister(ProfileImageVO profileImgVO) throws Exception;
 	
 	// 이메일 인증
 	public void accessAuthEmail(String email) throws Exception;
@@ -28,7 +28,7 @@ public interface UserDAO {
 	public boolean loginProgress(Map<String, String> loginMap) throws Exception;
 	
 	// 프로필 이미지 정보 얻음
-	public ProfileImgVO getPrfImg(String email) throws Exception;
+	public ProfileImageVO getPrfImg(String email) throws Exception;
 	
 	// 로그인 정보 유지
 	public void keepLoginInfo(Map<String, Object> keppUserInfo) throws Exception;

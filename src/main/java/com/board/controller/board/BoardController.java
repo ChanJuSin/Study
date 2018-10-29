@@ -1,4 +1,4 @@
-package com.board.controller;
+package com.board.controller.board;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 

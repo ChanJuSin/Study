@@ -3,4 +3,4 @@
 .email_check { margin-bottom: 15px; }
 .profile_image_sumnail { margin-bottom: 15px; }
 .profile_image_drop { height: 50px; border: 1px solid #80808099; background-color: #dae0e5; }
-.profileImg { border: 1px solid #00000029; }
+.profile_image { border: 1px solid #00000029; width: 100px; height: 100px;}

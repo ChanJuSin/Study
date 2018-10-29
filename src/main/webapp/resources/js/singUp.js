@@ -51,25 +51,27 @@ $(function() {
 		formData.append("file", file);
 		
 		$.ajax({
-			type: "POST",
-			url: "/upload/uploadFile?distinction=profile",
+			method: "post",
+			url: "/user/profile/uploadProfileImage",
 			data: formData,
 			dataType: "text",
 			processData: false,
 			contentType: false
 		})
-			.then((filePath) => {
+			.then((thumbnail_image_path) => {
 				imageUploadWhether = true;
 				
-				console.log(filePath);
+				console.log(thumbnail_image_path);
+				
+				let original_image_path = thumbnail_image_path.substring(0, 12) + thumbnail_image_path.substring(14);
 				
 				let html = `
-					<input type="button" class="deletePrfImg" value="삭제"/> 
-					<input type="hidden" id="filePath" name="thumbnail_file_path" value=${filePath} />
-					<input type="hidden" id="distinction" value="profile" />
+					<input type="button" class="delete-profile_image" value="삭제"/>
+					<input type="hidden" name="original_image_path" value=${original_image_path} /> 
+					<input type="hidden" name="thumbnail_image_path" value=${thumbnail_image_path} />
 					`;
 				
-				$(".profileImg").attr("src", "/upload/displayFile?filePath=" + filePath + "&distinction=profile");
+				$(".profile_image").attr("src", "/user/profile/displayProfileImage?imagePath=" + thumbnail_image_path);
 				$(".profile_image_sumnail").append(html);
 			})
 			.fail((err) => {
@@ -78,26 +80,27 @@ $(function() {
 	});
 	
 	// 프로필 이미지 삭제
-	$(".profile_image_sumnail").on("click", ".deletePrfImg", () => {
+	$(".profile_image_sumnail").on("click", ".delete-profile_image", () => {
 		$.ajax({
-			type: "POST",
-			url: "/upload/deleteFile",
-			data: { 
-				filePath: $("#filePath").val(),
-				distinction: $("#distinction").val()
-			},
+			method: "post",
+			url: "/user/profile/deleteProfileImage",
+			contentType: "application/json",
+			data: JSON.stringify({ 
+				original_image_path: $("input[name=original_image_path]").val(),
+				thumbnail_image_path: $("input[name=thumbnail_image_path]").val()
+			}),
 			dataType: "text"
 		})
-			.then(() => {
+			.then((result) => {
 				imageUploadWhether = false;
 				
-				alert("프로필 이미지가 삭제되었습니다.");
+				alert(result);
 				
-				$(".profileImg").attr("src", "/upload/displayFile?distinction=profile");
+				$(".profile_image").attr("src", "/user/profile/displayProfileImage");
 				
-				$(".deletePrfImg").remove();
-				$("#filePath").remove();
-				$("#distinction").remove();
+				$(".delete-profile_image").remove();
+				$("input[name=original_image_path]").remove();
+				$("input[name=thumbnail_image_path]").remove();
 			})
 			.fail((err) => {
 				console.error(err);

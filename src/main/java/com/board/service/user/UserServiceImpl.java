@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.board.domain.user.ProfileImgVO;
+import com.board.domain.user.ProfileImageVO;
 import com.board.domain.user.UserVO;
 import com.board.persistence.user.UserDAO;
 import com.board.util.authEmail.AuthEmail;
@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserService {
 	// 회원 가입 진행 
 	@Transactional
 	@Override
-	public void singUp(UserVO userVO, ProfileImgVO profileImgVO) throws Exception {
+	public void singUp(UserVO userVO, ProfileImageVO profileImageVO) throws Exception {
 		userDAO.singUp(userVO);
 		
-		userDAO.profileImgUp(profileImgVO);
+		userDAO.profileImageRegister(profileImageVO);
 		
 		AuthEmail authEmail = new AuthEmail();
 		authEmail.setContent("<a href=" + "http://localhost:8081/user/authEmail" + "?email=" + userVO.getEmail() + ">인증</a>");
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
 	// 프로필 이미지 정보 가져옴
 	@Override
-	public ProfileImgVO prfImgInfo(String email) throws Exception {
+	public ProfileImageVO prfImgInfo(String email) throws Exception {
 		return userDAO.getPrfImg(email);
 	}
 	

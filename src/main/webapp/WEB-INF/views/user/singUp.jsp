@@ -48,7 +48,7 @@
 			   		<div>
 			   		<label>프로필 이미지 썸네일</label>	
 			   		</div>
-			   		<img class="profileImg" src="/upload/displayFile?distinction=profile" style="height:100px; width: 100px;">
+			   		<img class="profile_image" src="/user/profile/displayProfileImage">
 			   </div>
 			   
 				<input type="submit" value="회원가입" class="btn btn-sm" />

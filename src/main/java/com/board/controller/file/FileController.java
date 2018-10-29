@@ -1,11 +1,9 @@
-package com.board.controller;
+package com.board.controller.file;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLDecoder;
-
-import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.util.staticVariable.UploadPath;
 import com.board.util.upload.DeleteFile;
 import com.board.util.upload.MediaUtils;
 import com.board.util.upload.UploadFileUtils;
@@ -26,46 +25,39 @@ import com.board.util.upload.UploadFileUtils;
 @Controller
 @RequestMapping("/upload/*")
 public class FileController {
-	
-	@Resource(name = "profileImgUploadPath") 
-	private String profileImgUploadPath;
-	
-	@Resource(name = "boardImgUploadPath")
-	private String boardImgUploadPath;
-	
-	@Resource(name = "boardFileUploadPath")
-	private String boardFileUploadPath;
 
 	// 파일 업로드 컨트롤러
 	@ResponseBody
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public ResponseEntity<String> uploadAjax(MultipartFile file, String distinction) throws Exception {
 		if (distinction.equals("profile")) {
-			return new ResponseEntity<>(UploadFileUtils.uploadFile(profileImgUploadPath, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);	
+			return new ResponseEntity<>(UploadFileUtils.uploadFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);	
 		} 
 		
-		return new ResponseEntity<>(UploadFileUtils.uploadFile(boardImgUploadPath, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);
+		return new ResponseEntity<>(UploadFileUtils.uploadFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);
 	}
 	
 	// 파일 이미지 / 다운로드 컨트롤러
 	@ResponseBody
 	@RequestMapping(value = "/displayFile", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> displayFile(@RequestParam(required=false, defaultValue="/default/defaultImg.jpg") String filePath, String distinction) throws Exception {
+		System.out.println("profileImageUplaodPath : " + UploadPath.PROFILE_IMAGE_UPLOAD_PATH);
+		
 		ResponseEntity<byte[]> entity = null;
 		
 		String fileType = filePath.substring(filePath.lastIndexOf(".") + 1);
 		
 		if (distinction.equals("profile")) {
 			if (filePath.equals("/default/defaultImg.jpg")) {
-				entity = displayDefaultImg(profileImgUploadPath, filePath.replace('/', File.separatorChar));
+				entity = displayDefaultImg(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath.replace('/', File.separatorChar));
 			} else {
-				entity = displayFileProcess(profileImgUploadPath, filePath.replace('/', File.separatorChar));
+				entity = displayFileProcess(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath.replace('/', File.separatorChar));
 			}
 		} else {
 			if (MediaUtils.getMediaType(fileType) != null) {
-				entity = displayFileProcess(boardImgUploadPath, filePath.replace('/', File.separatorChar));	
+				entity = displayFileProcess(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath.replace('/', File.separatorChar));	
 			} else {
-				entity = displayFileProcess(boardFileUploadPath, filePath.replace('/', File.separatorChar));
+				entity = displayFileProcess(UploadPath.BOARD_FILE_UPLOAD_PATH, filePath.replace('/', File.separatorChar));
 			}
 		} 
 		
@@ -121,16 +113,16 @@ public class FileController {
 		
 		if (distinction.equals("profile")) {
 			// 프로필 이미지 삭제
-			DeleteFile.deleteFile(profileImgUploadPath, filePath);
-			DeleteFile.deleteFile(profileImgUploadPath, filePath.substring(0, 12) + filePath.substring(14));
+			DeleteFile.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath);
+			DeleteFile.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + filePath.substring(14));
 		} else {
 			if (MediaUtils.getMediaType(fileType) != null) {
 				// 게시글 이미지 삭제
-				DeleteFile.deleteFile(boardImgUploadPath, filePath);
-				DeleteFile.deleteFile(boardImgUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
+				DeleteFile.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath);
+				DeleteFile.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + "s_" + filePath.substring(12));
 			} else {
 				// 게시글 파일 삭제
-				DeleteFile.deleteFile(boardFileUploadPath, filePath);
+				DeleteFile.deleteFile(UploadPath.BOARD_FILE_UPLOAD_PATH, filePath);
 			}
 		}
 		

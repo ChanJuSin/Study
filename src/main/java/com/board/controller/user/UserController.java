@@ -1,4 +1,4 @@
-package com.board.controller;
+package com.board.controller.user;
 
 import java.util.Date;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.WebUtils;
 
-import com.board.domain.user.ProfileImgVO;
+import com.board.domain.user.ProfileImageVO;
 import com.board.domain.user.UserVO;
 import com.board.service.user.UserService;
 
@@ -52,8 +52,8 @@ public class UserController {
 	
 	// 회원가입 진행
 	@RequestMapping(value = "/singUp", method = RequestMethod.POST)
-	public String joinPOST(UserVO userVO, ProfileImgVO profileImgVO, RedirectAttributes rttr) throws Exception {
-		userService.singUp(userVO, profileImgVO);
+	public String joinPOST(UserVO userVO, ProfileImageVO profileImageVO, RedirectAttributes rttr) throws Exception {
+		userService.singUp(userVO, profileImageVO);
 		
 		rttr.addFlashAttribute("message", "회원가입 인증 이메일이 전송되었습니다. 이메일 인증을 진행해주세요.");
 		return "redirect:/";

@@ -11,13 +11,13 @@
 	</select>
 	
 	<insert id="singUp">
-		insert into tbl_user (email, pw, name)
-		values (#{email}, #{pw}, #{name})
+		INSERT INTO TBL_USER (EMAIL, PW, NAME)
+		VALUES (#{email}, #{pw}, #{name})
 	</insert>
 	
-	<insert id="profileImgUp">
-		insert into tbl_user_prf (email, user_idx, thumbnail_file_path)
-		values (#{email}, last_insert_id(), #{thumbnail_file_path})
+	<insert id="profileImageRegister">
+		INSERT INTO TBL_USER_PROFILE (USER_IDX, ORIGINAL_IMAGE_PATH, THUMBNAIL_IMAGE_PATH)
+		VALUES (last_insert_id(), #{original_image_path}, #{thumbnail_image_path})
 	</insert>
 	
 	<update id="accessAuthEmail">
@@ -30,7 +30,7 @@
 		where email = #{email} and pw = #{pw}
 	</select>
 	
-	<select id="getPrfImg" resultType="ProfileImgVO">
+	<select id="getPrfImg" resultType="ProfileImageVO">
 		select thumbnail_file_path, crea_time
 		from tbl_user_prf
 		where email = #{email}

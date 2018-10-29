@@ -6,7 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.board.domain.user.ProfileImgVO;
+import com.board.domain.user.ProfileImageVO;
 import com.board.domain.user.UserVO;
 import com.board.util.authEmail.AuthEmail;
 import com.board.util.authEmail.SendAuthEmail;
@@ -22,7 +22,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	private static final String namespace = "com.board.mapper.UserMapper";
 	
-	// 회원가입 여부 체크
+	// 이메일 중복 체크
 	@Override
 	public boolean singUpCheck(String email) throws Exception {
 		String returnId = sqlSession.selectOne(namespace + ".singUpCheck", email);
@@ -48,8 +48,8 @@ public class UserDAOImpl implements UserDAO {
 	
 	// 프로필 이미지 등록
 	@Override
-	public void profileImgUp(ProfileImgVO profileImgVO) throws Exception {
-		sqlSession.insert(namespace + ".profileImgUp", profileImgVO);
+	public void profileImageRegister(ProfileImageVO profileImageVO) throws Exception {
+		sqlSession.insert(namespace + ".profileImageRegister", profileImageVO);
 	}
 
 	// 이메일 인증
@@ -72,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
 
 	// 프로필 이미지 정보 얻음
 	@Override
-	public ProfileImgVO getPrfImg(String email) throws Exception {
+	public ProfileImageVO getPrfImg(String email) throws Exception {
 		return sqlSession.selectOne(namespace + ".getPrfImg", email);
 	}
 	
