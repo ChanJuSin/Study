@@ -1,4 +1,6 @@
 let emailCheck = false;
+let formData = new FormData();
+
 
 // 폼체크
 function checkForm() {
@@ -47,70 +49,35 @@ $(function() {
 			return;
 		}
 		
-		let formData = new FormData();
-		formData.append("file", file);
+		let reader = new FileReader();
+		// 파일의 URL 정보 읽음
+		reader.readAsDataURL(files[0]);
 		
-		$.ajax({
-			method: "post",
-			url: "/user/profile/uploadProfileImage",
-			data: formData,
-			dataType: "text",
-			processData: false,
-			contentType: false
-		})
-			.then((thumbnail_image_path) => {
-				imageUploadWhether = true;
+		reader.onload = () => {
+			// formData에 file값이 없을경우
+			if (!formData.has("file")) {
+				formData.append("file", file);
+				console.dir(formData.get("file"));
+				$(".profile_image").attr("src", reader.result);
 				
-				console.log(thumbnail_image_path);
-				
-				let original_image_path = thumbnail_image_path.substring(0, 12) + thumbnail_image_path.substring(14);
-				
-				let html = `
-					<input type="button" class="delete-profile_image" value="삭제"/>
-					<input type="hidden" name="original_image_path" value=${original_image_path} /> 
-					<input type="hidden" name="thumbnail_image_path" value=${thumbnail_image_path} />
-					`;
-				
-				$(".profile_image").attr("src", "/user/profile/displayProfileImage?imagePath=" + thumbnail_image_path);
+				let html = `<input type="button" class="delete-profile_image" value="삭제"/>`;
 				$(".profile_image_sumnail").append(html);
-			})
-			.fail((err) => {
-				console.error(err);
-			});
+				imageUploadWhether = true;
+			}
+		};
 	});
 	
 	// 프로필 이미지 삭제
 	$(".profile_image_sumnail").on("click", ".delete-profile_image", () => {
-		$.ajax({
-			method: "post",
-			url: "/user/profile/deleteProfileImage",
-			contentType: "application/json",
-			data: JSON.stringify({ 
-				original_image_path: $("input[name=original_image_path]").val(),
-				thumbnail_image_path: $("input[name=thumbnail_image_path]").val()
-			}),
-			dataType: "text"
-		})
-			.then((result) => {
-				imageUploadWhether = false;
-				
-				alert(result);
-				
-				$(".profile_image").attr("src", "/user/profile/displayProfileImage");
-				
-				$(".delete-profile_image").remove();
-				$("input[name=original_image_path]").remove();
-				$("input[name=thumbnail_image_path]").remove();
-			})
-			.fail((err) => {
-				console.error(err);
-			});
+		$(".profile_image_sumnail .delete-profile_image").remove();
+		$(".profile_image_sumnail .profile_image").attr("src", "/user/profile/displayProfileImage");
+		imageUploadWhether = false;
 	});
 	
 	// 이메일 중복 체크
 	$(".email_check").on("click", () => {
 		$.ajax({
-			type: "POST",
+			method: "post",
 			url: "/user/emailCheck",
 			data: {
 				email: $("#email").val()
@@ -122,6 +89,7 @@ $(function() {
 				
 				if (message === "이메일이 중복됩니다.") {
 					emailCheck = false;
+					emailDuplicate = true;
 					return;
 				}
 				
@@ -130,5 +98,45 @@ $(function() {
 			.fail((err) => {
 				console.error(err);
 			});
+	});
+	
+	// 회원가입
+	$(".singUpForm .singUpForm_Submit").on("submit", (event) => {
+		event.preventDefault();
+		
+		// 입력 폼 체크
+		if (!checkForm()) {
+			return;
+		}
+		
+		if (formData.has("file")) {
+			// 회원가입시 프로필 등록
+			$.ajax({
+				method: "post",
+				url: "/user/profile/uploadProfileImage",
+				data: formData,
+				dataType: "text",
+				processData: false,
+				contentType: false
+			})
+				.then((thumbnail_image_path) => {
+					let original_image_path = thumbnail_image_path.substring(0, 12) + thumbnail_image_path.substring(14);
+					
+					let html = `
+						<input type="hidden" name="original_image_path" value=${original_image_path} /> 
+						<input type="hidden" name="thumbnail_image_path" value=${thumbnail_image_path} />
+						`;
+					
+					$(".profile_image").attr("src", "/user/profile/displayProfileImage?imagePath=" + thumbnail_image_path);
+					$(".profile_image_sumnail").append(html);
+				})
+				.fail((err) => {
+					console.log(err);
+					alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+				});
+		}
+		
+		// 회원가입
+		$(".singUpForm .singUpForm_Submit").get(0).submit();
 	});
 });

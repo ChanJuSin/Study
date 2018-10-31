@@ -34,7 +34,11 @@ public class UserServiceImpl implements UserService {
 		userDAO.profileImageRegister(profileImageVO);
 		
 		AuthEmail authEmail = new AuthEmail();
-		authEmail.setContent("<a href=" + "http://localhost:8081/user/authEmail" + "?email=" + userVO.getEmail() + ">인증</a>");
+		String authHtml =  "<form action=http://localhost:8080/user/authEmail method=post>" 
+					+ "	<input type=hidden value=" + userVO.getEmail() + " name=email />"
+					+ " <input type=submit value=이메일인증 />" 
+					+ "</form>";
+		authEmail.setContent(authHtml);
 		authEmail.setReceiver(userVO.getEmail());
 		authEmail.setSubject("회원가입 이메일 인증");
 		

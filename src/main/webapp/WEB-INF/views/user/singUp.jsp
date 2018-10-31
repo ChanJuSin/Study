@@ -18,7 +18,7 @@
 	
 	<div class="container">
 		<div class="singUpForm">
-			<form method="post" action="/user/singUp" onsubmit="return checkForm();">
+			<form class="singUpForm_Submit" method="post" action="/user/singUp">
 				<div class="form-group">
 			        <label for="email">이메일</label>
 			        <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요." />

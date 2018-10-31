@@ -60,7 +60,7 @@ public class UserController {
 	}
 	
 	// 이메일 인증
-	@RequestMapping(value = "/authEmail", method = RequestMethod.GET) 
+	@RequestMapping(value = "/authEmail", method = RequestMethod.POST) 
 	public String authEmail(String email, RedirectAttributes rttr, HttpServletRequest request) throws Exception {
 		if (request.getSession().getAttribute("loginInfo") != null) {
 			request.getSession().removeAttribute("loginInfo");
