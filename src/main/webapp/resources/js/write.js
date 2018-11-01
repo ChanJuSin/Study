@@ -1,3 +1,7 @@
+let formData = new FormData();
+let file = [];
+let imageTagIndex = 1;
+
 // 돔 이벤트 막기
 function eventPrevent(event) {
 	event.stopPropagation();
@@ -13,9 +17,15 @@ function dropZoneReset(dropZone) {
 // 이미지 파일 업로드
 function imageFileUpload(file) {
 	let formData = new FormData();
-	formData.append("file", file);
 	
-	$.ajax({
+	file.forEach((currentValue, index) => {
+		console.log(index);
+		formData.append("file", currentValue);
+	});
+	
+	console.log(formData.getAll("file"));
+	
+/*	$.ajax({
 		type: "post",
 		url: "/upload/uploadFile?distinction=board",
 		data: formData,
@@ -36,58 +46,82 @@ function imageFileUpload(file) {
 			target.append(deleteImageTag);
 			target.append("<br><br>");
 		}
-	});
+	});*/
 }
 
-// 이미지 드랍 이벤트
+//이미지 드랍 이벤트
 function fileDropDown() {
-	 let dropZone = $(".content");
-   
-     dropZone.on('dragover',function(event){
-    	 eventPrevent(event);
-         
-         dropZone.css('background-color','#E3F2FC');
-     });
-     
-     
-     dropZone.on("dragenter", function(event) {
-    	 eventPrevent(event);
-    	
-    	let fileDropMsg = "<h3>이미지 파일을 해당 영역으로 Drag & Drop 해주세요.</h3>";
-    	dropZone.append(fileDropMsg);
-    	
-    	$(".content").css("position", "relative");
-    	$(".content h3").css({
-    		"padding": "0",
-    		"margin": "0",
-    		"position": "absolute",
-    		"left": "276px",
-    		"top": "237px"
-    	});
-     });
-     
-     dropZone.on('dragleave',function(event){
-    	 eventPrevent(event);
-    	 dropZoneReset(dropZone);
-     });
-     
-     dropZone.on("drop", function(event) {
-    	 eventPrevent(event);
-    	 dropZoneReset(dropZone);
-    	 
-    	 let files = event.originalEvent.dataTransfer.files;
-    	 let file = files[0];
-    	 
-    	 if (!checkFileType(file.name)) {
-             alert("이미지 파일만 등록가능합니다.");
-             return;
-         } else if (files.length > 1) {
-             alert("이미지 파일을 하나씩 등록해주세요.");
-             return;
-         }
-    	 
-    	 imageFileUpload(file);
-     });
+    let dropZone = $(".content");
+
+    dropZone.on('dragover', function(event) {
+        eventPrevent(event);
+
+        dropZone.css('background-color', '#E3F2FC');
+    });
+
+
+    dropZone.on("dragenter", function(event) {
+        eventPrevent(event);
+    });
+
+    dropZone.on('dragleave', function(event) {
+        eventPrevent(event);
+        dropZoneReset(dropZone);
+    });
+
+    dropZone.on("drop", function(event) {
+        eventPrevent(event);
+        dropZoneReset(dropZone);
+
+        let files = event.originalEvent.dataTransfer.files;
+        file.push(files[0]);
+
+        if (!checkFileType(files[0].name)) {
+            alert("이미지 파일만 등록가능합니다.");
+            return;
+        } else if (files.length > 1) {
+            alert("이미지 파일을 하나씩 등록해주세요.");
+            return;
+        }
+
+        let reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+
+        reader.onload = () => {
+        	console.log(file);
+        	
+            let imageTag = `<img src=${reader.result} class=image${imageTagIndex} style="vertical-align:bottom;" />`;
+            $(".content").append(imageTag);
+
+
+            let html = `<input type="button" class="delete-board_image" value="삭제"/> <br/><br/>`;
+            $(".content .image" + imageTagIndex).after(html);
+
+            let tempImage = new Image();
+            tempImage.src = reader.result;
+
+            tempImage.onload = function() {
+                if (tempImage.width > 1000) {
+                    let canvas = document.createElement('canvas');
+                    let canvasContext = canvas.getContext("2d");
+
+                    let imageWidth = tempImage.width / 2;
+                    let imageHeight = tempImage.height / 2;
+
+                    canvas.width = imageWidth;
+                    canvas.height = imageHeight;
+
+                    canvasContext.drawImage(this, 0, 0, imageWidth, imageHeight);
+
+                    var dataURI = canvas.toDataURL("image/jpeg");
+
+                    document.querySelector(".content .image" + imageTagIndex).src = dataURI;
+                }
+            };
+        }
+        
+        imageTagIndex += 1;
+    });
 }
 
 // 게시글 작성
@@ -103,7 +137,9 @@ function writeFormSubmit() {
 			return $(".content").focus();
 		}
 		
-		let str = "";
+		imageFileUpload(file);
+		
+		/*let str = "";
 		let imageSelect = $(".content img");
 		
 		imageSelect.each(function() {
@@ -123,7 +159,7 @@ function writeFormSubmit() {
 			return;
 		}
 		
-		$("#writeForm").get(0).submit();
+		$("#writeForm").get(0).submit();*/
 	});
 }
 
@@ -132,28 +168,11 @@ $(function() {
 	writeFormSubmit();
 	
 	// 이미지 삭제 
-	$(".content").on("click", "a", function() {
+	$(".content").on("click", ".delete-board_image", function() {
 		let currentTag = $(this);
-		let prevTag = currentTag.prev();
 		
-		let filePath = currentTag.attr("data-filePath");
-
-		let formData = new FormData();
-		formData.append("filePath", filePath); 
-		formData.append("distinction", "board");
-		
-		$.ajax({
-			type: "post",
-			url: "/upload/deleteFile",
-			data: formData,
-			dataType: "text",
-			processData: false,
-			contentType: false,
-			success: function() {
-				currentTag.remove();
-				prevTag.remove();
-			}
-		}); 
+		currentTag.prev().remove();
+		currentTag.remove();
 	});
 	
 	// 파일 폼 추가

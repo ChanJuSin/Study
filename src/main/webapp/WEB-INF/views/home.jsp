@@ -25,12 +25,12 @@
 		
 			<div class="profile">
 				<div class="profile_image_sumnail">
-					<img class="profileImg" src="/upload/displayFile?filePath=${prfImgInfo.thumbnail_file_path }&distinction=profile" width="100px" height="100px">
+					<img class="profileImg" src="/user/profile/displayProfileImage?imagePath=${profileImageInfo.thumbnail_image_path }" width="100px" height="100px">
 					<a href="/user/myPage">내정보 수정</a>
 				</div>
 				
 				<h6>${loginInfo.email}님 환영합니다.</h6>
-				<h6>프로필 이미지 등록 날짜 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${prfImgInfo.crea_time }"/></h6>
+				<h6>프로필 이미지 등록 날짜 : <fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${profileImageInfo.register_image_time }"/></h6>
 			</div>
 		</c:if>
 	</div>

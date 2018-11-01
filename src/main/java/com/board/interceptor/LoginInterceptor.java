@@ -14,8 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.board.domain.user.UserVO;
-
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
@@ -31,7 +29,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			
 			ModelMap modelMap = modelAndView.getModelMap();
 			Object userVO = modelMap.get("loginInfo");
-			Object prfImgInfo = modelMap.get("prfImgInfo");
+			Object profileImageInfo = modelMap.get("profileImageInfo");
 			
 			FlashMap flashMap = new FlashMap();
 			FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
@@ -55,7 +53,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				
 				logger.info("로그인이 되었습니다.");
 				session.setAttribute("loginInfo", userVO);
-				session.setAttribute("prfImgInfo", prfImgInfo);
+				session.setAttribute("profileImageInfo", profileImageInfo);
 				
 				flashMap.put("loginResult", true);
 				flashMapManager.saveOutputFlashMap(flashMap, request, response);

@@ -53,6 +53,9 @@ public class UserController {
 	// 회원가입 진행
 	@RequestMapping(value = "/singUp", method = RequestMethod.POST)
 	public String joinPOST(UserVO userVO, ProfileImageVO profileImageVO, RedirectAttributes rttr) throws Exception {
+		logger.info("UserVO : " + userVO);
+		logger.info("profileImageVO : " + profileImageVO);
+		
 		userService.singUp(userVO, profileImageVO);
 		
 		rttr.addFlashAttribute("message", "회원가입 인증 이메일이 전송되었습니다. 이메일 인증을 진행해주세요.");
@@ -84,9 +87,9 @@ public class UserController {
 	// 로그인 진행
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public void loginPOST(UserVO userVO, boolean useCookie, Model model, HttpSession session) throws Exception {
-		boolean loginResult = userService.login(userVO.getEmail(), userVO.getPw());
+		UserVO loginInfo = userService.login(userVO.getEmail(), userVO.getPw());
 		
-		if (!loginResult) {
+		if (loginInfo == null) {
 			model.addAttribute("loginInfo", null);
 		} else {
 			if (useCookie) {
@@ -94,11 +97,11 @@ public class UserController {
 				
 				Date sessionLimit = new Date(System.currentTimeMillis() + (1000 * keepTime));
 				
-				userService.keepLogin(userVO.getEmail(), session.getId(), sessionLimit);
+				userService.keepLogin(loginInfo.getIdx(), session.getId(), sessionLimit);
 			}
 			
-			model.addAttribute("prfImgInfo", userService.prfImgInfo(userVO.getEmail()));
-			model.addAttribute("loginInfo", userService.userInfo(userVO.getEmail()));
+			model.addAttribute("profileImageInfo", userService.profileImageInfo(loginInfo.getIdx()));
+			model.addAttribute("loginInfo", loginInfo);
 		}
 	};
 	
@@ -113,7 +116,7 @@ public class UserController {
 			loginCookie.setPath("/");
 			loginCookie.setMaxAge(0);
 			response.addCookie(loginCookie);
-			userService.keepLogin(userVO.getEmail(), loginCookie.getValue(), new Date());
+			userService.keepLogin(userVO.getIdx(), loginCookie.getValue(), new Date());
 		}
 
 		session.removeAttribute("loginInfo");
