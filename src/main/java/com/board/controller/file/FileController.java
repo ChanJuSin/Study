@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.util.file.DeleteFile;
+import com.board.util.file.MediaUtils;
+import com.board.util.file.UploadFileUtils;
 import com.board.util.staticVariable.UploadPath;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.MediaUtils;
-import com.board.util.upload.UploadFileUtils;
 
 @Controller
 @RequestMapping("/upload/*")

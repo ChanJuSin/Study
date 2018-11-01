@@ -1,13 +1,9 @@
 package com.board.controller.board;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.board.BoardVO;
 import com.board.service.board.BoardService;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.UploadFileUtils;
+import com.board.util.file.DeleteFile;
+import com.board.util.file.UploadFileUtils;
 
 @Controller
 @RequestMapping("/board/*")

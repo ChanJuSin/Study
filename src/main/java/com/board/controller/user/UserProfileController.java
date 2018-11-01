@@ -17,19 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.user.ProfileImageVO;
+import com.board.util.file.DeleteFile;
+import com.board.util.file.DisplayImage;
+import com.board.util.file.MediaUtils;
+import com.board.util.file.UploadFileUtils;
 import com.board.util.staticVariable.UploadPath;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.MediaUtils;
-import com.board.util.upload.UploadFileUtils;
 
 @Controller
 @RequestMapping("/user/profile/*")
-public class ProfileController {
+public class UserProfileController {
 	
 	// 프로필 이미지 업로드 컨트롤러
 	@ResponseBody
 	@RequestMapping(value = "/uploadProfileImage", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
-	public ResponseEntity<String> uploadAjax(MultipartFile file) throws Exception {
+	public ResponseEntity<String> uploadProfileImage(MultipartFile file) throws Exception {
 		return new ResponseEntity<>(UploadFileUtils.uploadFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, file.getOriginalFilename(), file.getBytes()), HttpStatus.CREATED);	
 	}
 
@@ -46,23 +47,7 @@ public class ProfileController {
 	@ResponseBody
 	@RequestMapping(value = "/displayProfileImage", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> displayProfileImage(@RequestParam(required=false, defaultValue="\\default\\defaultImg.jpg") String imagePath) throws Exception {
-		ResponseEntity<byte[]> entity = null;
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-		imagePath = imagePath.replace('/', File.separatorChar);
-		
-		String imageType = imagePath.substring(imagePath.lastIndexOf(".") + 1);
-		
-		headers.setContentType(MediaUtils.getMediaType(imageType));
-		
-		try (InputStream in = new FileInputStream(UploadPath.PROFILE_IMAGE_UPLOAD_PATH + imagePath)) {
-			entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
-		} catch (Exception e) {
-			throw e;
-		}
-		
-		return entity;
+		return DisplayImage.displayImage(imagePath, UploadPath.PROFILE_IMAGE_UPLOAD_PATH);
 	}
 	
 }

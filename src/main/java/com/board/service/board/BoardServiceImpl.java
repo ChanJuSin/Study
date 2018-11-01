@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.board.BoardVO;
 import com.board.persistence.board.BoardDAO;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.UploadFileUtils;
+import com.board.util.file.DeleteFile;
+import com.board.util.file.UploadFileUtils;
 
 @Service
 public class BoardServiceImpl implements BoardService {

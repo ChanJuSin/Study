@@ -1,6 +1,6 @@
 let formData = new FormData();
 let file = [];
-let imageTagIndex = 1;
+let imageTagIndex = 0;
 
 // 돔 이벤트 막기
 function eventPrevent(event) {
@@ -18,33 +18,23 @@ function dropZoneReset(dropZone) {
 function imageFileUpload(file) {
 	let formData = new FormData();
 	
-	file.forEach((currentValue, index) => {
+	file.forEach(function(value, index) {
 		console.log(index);
-		formData.append("file", currentValue);
+		console.log(value);
 	});
+	/*
+	console.log(formData.getAll("files"));
 	
-	console.log(formData.getAll("file"));
-	
-/*	$.ajax({
-		type: "post",
-		url: "/upload/uploadFile?distinction=board",
+	$.ajax({
+		method: "post",
+		url: "/board/image/uploadBoardImage",
 		data: formData,
 		processData: false,
 		contentType: false,
-		success: function(filePath) {
-			filePath = filePath.substring(0, 12) + filePath.substring(14);
-			
-			let target = $(".content");
-			let imageTag = "<img src=/upload/displayFile?filePath=" + filePath + "&distinction=board style=vertical-align:bottom>";
-			let deleteImageTag = "<a data-filePath='"+ filePath +"'>삭제</a>";
-			
-			$(".content").on("mouseover", "a", function() {
-				$(this).css("cursor", "default");
+		success: function(result) {
+			$(".content img").each(function(index, value) {
+				$(this).attr("src", "/board/image/displayBoardImage?imagePath=" + result[index]);
 			});
-			
-			target.append(imageTag);
-			target.append(deleteImageTag);
-			target.append("<br><br>");
 		}
 	});*/
 }
@@ -72,6 +62,8 @@ function fileDropDown() {
     dropZone.on("drop", function(event) {
         eventPrevent(event);
         dropZoneReset(dropZone);
+        
+        imageTagIndex += 1;
 
         let files = event.originalEvent.dataTransfer.files;
         file.push(files[0]);
@@ -88,14 +80,18 @@ function fileDropDown() {
         reader.readAsDataURL(files[0]);
 
         reader.onload = () => {
-        	console.log(file);
-        	
-            let imageTag = `<img src=${reader.result} class=image${imageTagIndex} style="vertical-align:bottom;" />`;
+            let imageTag = `<img src=${reader.result} name=image class=image${imageTagIndex} style="vertical-align:bottom;" />`;
             $(".content").append(imageTag);
 
 
-            let html = `<input type="button" class="delete-board_image" value="삭제"/> <br/><br/>`;
+            let html = 
+            `
+            	<input type="button" class="delete-board_image" value="삭제"/>
+            	<br/><br/>
+            `;
             $(".content .image" + imageTagIndex).after(html);
+            $(".content .data-file" + imageTagIndex).val(files[0]);
+            console.dir(files[0]);
 
             let tempImage = new Image();
             tempImage.src = reader.result;
@@ -113,14 +109,12 @@ function fileDropDown() {
 
                     canvasContext.drawImage(this, 0, 0, imageWidth, imageHeight);
 
-                    var dataURI = canvas.toDataURL("image/jpeg");
+                    let dataURI = canvas.toDataURL("image/jpeg");
 
                     document.querySelector(".content .image" + imageTagIndex).src = dataURI;
                 }
             };
         }
-        
-        imageTagIndex += 1;
     });
 }
 
@@ -170,6 +164,13 @@ $(function() {
 	// 이미지 삭제 
 	$(".content").on("click", ".delete-board_image", function() {
 		let currentTag = $(this);
+		let currentImageTagIndex = $(this).prev().index((".content img[name=image]"));
+		
+		console.log(currentImageTagIndex);
+		
+		file.splice(currentImageTagIndex, 1);
+		
+		console.log(file);
 		
 		currentTag.prev().remove();
 		currentTag.remove();
