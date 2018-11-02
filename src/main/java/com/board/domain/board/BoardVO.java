@@ -11,6 +11,7 @@ public class BoardVO {
 	private String content;
 	private int views;
 	private Date crea_time;
+	private String thumbnail_image_path; // 프로필 이미지 경로
 	
 	public int getIdx() {
 		return idx;
@@ -54,11 +55,18 @@ public class BoardVO {
 	public void setCrea_time(Date crea_time) {
 		this.crea_time = crea_time;
 	}
+	public String getThumbnail_image_path() {
+		return thumbnail_image_path;
+	}
+	public void setThumbnail_image_path(String thumbnail_image_path) {
+		this.thumbnail_image_path = thumbnail_image_path;
+	}
 	
 	@Override
 	public String toString() {
 		return "BoardVO [idx=" + idx + ", user_idx=" + user_idx + ", writer=" + writer + ", title=" + title
-				+ ", content=" + content + ", views=" + views + ", crea_time=" + crea_time + "]";
+				+ ", content=" + content + ", views=" + views + ", crea_time=" + crea_time + ", thumbnail_image_path="
+				+ thumbnail_image_path + "]";
 	}
 	
 }

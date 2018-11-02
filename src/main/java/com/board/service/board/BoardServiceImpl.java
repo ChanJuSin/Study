@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.board.BoardVO;
 import com.board.persistence.board.BoardDAO;
-import com.board.util.file.DeleteFile;
+import com.board.util.file.FileRelatedUtils;
 import com.board.util.file.UploadFileUtils;
 
 @Service
@@ -22,17 +22,17 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Transactional
 	@Override
-	public void write(BoardVO boardVO, String[] images, List<String> boardFilePathList) throws Exception {
+	public void write(BoardVO boardVO, String[] board_original_image_paths, String[] board_thumbnail_image_paths, List<String> boardFilePathList) throws Exception {
 		boardDAO.register(boardVO);
 		
 		Map<String, Object> fileMap = new HashMap<>();
-		fileMap.put("writer", boardVO.getWriter());
-		fileMap.put("board_idx", boardDAO.getPageIdx());
-		fileMap.put("user_idx", boardVO.getIdx());
+		/*fileMap.put("board_idx", boardDAO.getPageIdx());*/
+		fileMap.put("user_idx", boardVO.getUser_idx());
 		
-		if (images != null) {
-			for (String image : images) {
-				fileMap.put("boardImageFilePath", image);
+		if ((board_original_image_paths != null) && (board_thumbnail_image_paths != null)) {
+			for (int index = 0; index < board_original_image_paths.length; index++) {
+				fileMap.put("boardOriginalImagePath", board_original_image_paths[index]);
+				fileMap.put("boardThumbnailImagePath", board_thumbnail_image_paths[index]);
 				boardDAO.imageRegister(fileMap);
 			}
 		}
@@ -52,16 +52,14 @@ public class BoardServiceImpl implements BoardService {
 
 	@Transactional
 	@Override
-	public Map<String, Object> read(int idx, int user_idx, String writer) throws Exception {
+	public Map<String, Object> read(BoardVO boardVO) throws Exception {
 		Map<String, Object> infoMap = new HashMap<>();
-		infoMap.put("idx", idx);
-		infoMap.put("user_idx", user_idx);
-		infoMap.put("writer", writer);
+		infoMap.put("idx", boardVO.getIdx());
+		infoMap.put("user_idx", boardVO.getUser_idx());
 		
 		Map<String, Object> pageInfo = new HashMap<>();
 		pageInfo.put("boardVO", boardDAO.getPage(infoMap));
 		pageInfo.put("boardFileVO", boardDAO.getFile(infoMap));
-		pageInfo.put("boardProfileImageVO", boardDAO.getProfileImage(infoMap));
 		pageInfo.put("boardImageVO", boardDAO.getImages(infoMap));
 		
 		return pageInfo;
@@ -79,15 +77,15 @@ public class BoardServiceImpl implements BoardService {
 		
 		if (images.length > 0) {
 			for (String image: images) {
-				DeleteFile.deleteFile(boardImgUploadPath, image);
-				DeleteFile.deleteFile(boardImgUploadPath, image.substring(0, 12) + "s_" + image.substring(12));
+				FileRelatedUtils.deleteFile(boardImgUploadPath, image);
+				FileRelatedUtils.deleteFile(boardImgUploadPath, image.substring(0, 12) + "s_" + image.substring(12));
 			}
 			boardDAO.deleteBoardFile(deleteInfoMap);
 		} 
 		
 		if (files.length > 0) {
 			for (String file: files) {
-				DeleteFile.deleteFile(boardFileUploadPath, file);
+				FileRelatedUtils.deleteFile(boardFileUploadPath, file);
 			}
 			boardDAO.deleteBoardImage(deleteInfoMap);
 		}
@@ -116,8 +114,8 @@ public class BoardServiceImpl implements BoardService {
 		if (deleteImages.length > 0) {
 			for (String deleteImage: deleteImages) {
 				String filePath = deleteImage.split("\\.")[0] + "." + deleteImage.split("\\.")[1].substring(0, 3);
-				DeleteFile.deleteFile(boardImageUploadPath, filePath);
-				DeleteFile.deleteFile(boardImageUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
+				FileRelatedUtils.deleteFile(boardImageUploadPath, filePath);
+				FileRelatedUtils.deleteFile(boardImageUploadPath, filePath.substring(0, 12) + "s_" + filePath.substring(12));
 				modifyInfo.put("boardImageFilePath", filePath);
 				boardDAO.modifyDeleteImage(modifyInfo);
 			}

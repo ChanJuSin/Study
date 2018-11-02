@@ -19,11 +19,8 @@ function imageFileUpload(file) {
 	let formData = new FormData();
 	
 	file.forEach(function(value, index) {
-		console.log(index);
-		console.log(value);
+		formData.append("files", file[index]);
 	});
-	/*
-	console.log(formData.getAll("files"));
 	
 	$.ajax({
 		method: "post",
@@ -32,11 +29,20 @@ function imageFileUpload(file) {
 		processData: false,
 		contentType: false,
 		success: function(result) {
+			$(".content .delete-board_image").remove();
+			
 			$(".content img").each(function(index, value) {
 				$(this).attr("src", "/board/image/displayBoardImage?imagePath=" + result[index]);
+				$(this).removeAttr("class");
+				let thumbnail_image_path = result[index].substring(0, 12) + "s_" + result[index].substring(12);
+				$(".board-original_image-path_list").append(`<input type="hidden" name="board_original_image_paths" value=${result[index]} />`);
+				$(".board-thumbnail_image-path_list").append(`<input type="hidden" name="board_thumbnail_image_paths" value=${thumbnail_image_path} />`);
+			}).promise().done(() => {
+				$("#content").val($(".content").html());
+				$("#writeForm").get(0).submit();
 			});
 		}
-	});*/
+	});
 }
 
 //이미지 드랍 이벤트
@@ -67,6 +73,8 @@ function fileDropDown() {
 
         let files = event.originalEvent.dataTransfer.files;
         file.push(files[0]);
+        
+        console.log(file);
 
         if (!checkFileType(files[0].name)) {
             alert("이미지 파일만 등록가능합니다.");
@@ -131,7 +139,18 @@ function writeFormSubmit() {
 			return $(".content").focus();
 		}
 		
-		imageFileUpload(file);
+		if(document.getElementById("content").value.length > 50000) {
+			console.log(document.getElementById("content").value.length);
+			alert("작성 글내용의 데이터가 너무 큽니다. 다시 입력해주세요.");
+			return;
+		}
+		
+		if (file.length > 0) {
+			imageFileUpload(file);
+		} else {
+			$("#content").val($(".content").html());
+			$("#writeForm").get(0).submit();
+		}
 		
 		/*let str = "";
 		let imageSelect = $(".content img");
@@ -142,18 +161,7 @@ function writeFormSubmit() {
 		});
 		
 		console.log($(".content").html());
-		
-		$(".content").append(str);
-		$(".content a").remove();
-		$("#content").val($(".content").html());
-		
-		if(document.getElementById("content").value.length > 50000) {
-			console.log(document.getElementById("content").value.length);
-			alert("작성 글내용의 데이터가 너무 큽니다. 다시 입력해주세요.");
-			return;
-		}
-		
-		$("#writeForm").get(0).submit();*/
+		*/
 	});
 }
 

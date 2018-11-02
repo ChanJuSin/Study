@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.board.util.file.DisplayImage;
+import com.board.util.file.FileRelatedUtils;
 import com.board.util.file.UploadFileUtils;
 import com.board.util.staticVariable.UploadPath;
 
@@ -38,12 +38,19 @@ public class BoardImageController {
 		return imagePaths;
 	}
 	
-	// 프로필 이미지 리턴 컨트롤러 
+	// 게시글 이미지 리턴 컨트롤러 
 	@ResponseBody
 	@RequestMapping(value = "/displayBoardImage", method = RequestMethod.GET)
 	public ResponseEntity <byte[]> displayBoardImage(String imagePath) throws Exception {
-		return DisplayImage.displayImage(imagePath, UploadPath.BOARD_IMAGE_UPLOAD_PATH);
+		return FileRelatedUtils.displayImage(imagePath, UploadPath.BOARD_IMAGE_UPLOAD_PATH);
 	}	
+	
+	// 게시글 파일 다운로드
+	@ResponseBody
+	@RequestMapping(value = "/downloadBoardFile", method = RequestMethod.GET)
+	public void downloadBoardFile(String filePath) throws Exception {
+		
+	}
 	
 	
 }

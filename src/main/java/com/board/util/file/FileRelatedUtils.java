@@ -9,8 +9,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class DisplayImage {
+public class FileRelatedUtils {
 
+	// 파일 삭제
+	public static void deleteFile(String folderPath, String filePath) {
+		new File(folderPath + filePath).delete();
+	}
+	
 	// 이미지 리턴
 	public static ResponseEntity<byte[]> displayImage(String imagePath, String folderPath) throws Exception {
 		ResponseEntity < byte[] > entity = null;
@@ -24,11 +29,11 @@ public class DisplayImage {
 		headers.setContentType(MediaUtils.getMediaType(imageType));
 
 		try (InputStream in = new FileInputStream(folderPath + imagePath)) {
-		    entity = new ResponseEntity < byte[] > (IOUtils.toByteArray( in ), headers, HttpStatus.CREATED);
+			entity = new ResponseEntity < byte[] > (IOUtils.toByteArray( in ), headers, HttpStatus.CREATED);
 		} catch (Exception e) {
-		    throw e;
+			throw e;
 		}		
-		
+			
 		return entity;
 	}
 	

@@ -35,6 +35,10 @@
 					<input type="hidden" name="content" id="content" />
 				</div> 
 				
+				<div class="board-original_image-path_list"></div>
+				
+				<div class="board-thumbnail_image-path_list"></div>
+				
 				<div class="form-group">
 					<input type="file" name="files" style="margin-bottom: 15px;" />
 					<input type="button" id="addFileForm" value="파일 폼 추가" />

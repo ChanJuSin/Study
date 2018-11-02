@@ -18,7 +18,7 @@
 		<main class="read-page">
 			<section class="read-page_header">
 				<div class="read-page_info">
-					<img src="/upload/displayFile?filePath=${pageInfo.boardProfileImageVO.thumbnail_file_path }&distinction=profile" />
+					<img src="/user/profile/displayProfileImage?imagePath=${pageInfo.boardVO.thumbnail_image_path }" />
 					<div class="read-page_user-info">
 						<a href="#"><p>${pageInfo.boardVO.writer }</p></a>
 						<span><fmt:formatDate value="${pageInfo.boardVO.crea_time }" pattern="yyyy-MM-dd hh:mm:dd"/></span>
@@ -62,15 +62,9 @@
 			<div class="page-control">
 				<a href="/board/modify?idx=${pageInfo.boardVO.idx }&user_idx=${pageInfo.boardVO.user_idx}&writer=${pageInfo.boardVO.writer}" class="btn btn-sm">수정</a>
 				<form method="post" action="/board/delete">
-					<input type="hidden" name="board_idx" value="${pageInfo.boardVO.idx }" />
+					<input type="hidden" name="idx" value="${pageInfo.boardVO.idx }" />
 					<input type="hidden" name="user_idx" value="${pageInfo.boardVO.user_idx }" />
 					<input type="hidden" name="writer" value="${pageInfo.boardVO.writer }" />
-					<c:forEach items="${pageInfo.boardImageVO }" var="boardImageVO">
-						<input type="hidden" name="images" value="${boardImageVO.board_image_file_path }" />
-					</c:forEach>
-					<c:forEach items="${pageInfo.boardFileVO }" var="boardFileVO">
-						<input type="hidden" name="files" value="${boardFileVO.board_file_path }" />
-					</c:forEach>
 					<input type="submit" value="삭제" class="btn btn-sm" />
 				</form>
 			</div>

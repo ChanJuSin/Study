@@ -6,52 +6,44 @@
 <mapper namespace="com.board.mapper.BoardMapper">
 
 	<insert id="register">
-		insert into tbl_board (user_idx, writer, title, content) 
-		values (#{user_idx}, #{writer}, #{title}, #{content})
+		INSERT INTO TBL_BOARD (USER_IDX, WRITER, TITLE, CONTENT)
+		VALUES (#{user_idx}, #{writer}, #{title}, #{content})
 	</insert>
 	
-	<select id="getPageIdx" resultType="int">
-		select last_insert_id()
-	</select>
-	
 	<insert id="imageRegister">
-		insert into tbl_board_image_file (writer, board_image_file_path, board_idx)
-		values (#{writer}, #{boardImageFilePath}, #{board_idx})
+		INSERT INTO TBL_BOARD_IMAGE_FILE (USER_IDX, BOARD_IDX, BOARD_ORIGINAL_IMAGE_PATH, BOARD_THUMBNAIL_IMAGE_PATH)
+		VALUES (#{user_idx}, last_insert_id(), #{boardOriginalImagePath}, #{boardThumbnailImagePath})
 	</insert>
 	
 	<insert id="fileRegister">
-		insert into tbl_board_file (writer, board_file_path, board_idx)
-		value (#{writer}, #{boardFilePath}, #{board_idx})
+		INSERT INTO TBL_BOARD_FILE (USER_IDX, BOARD_IDX, BOARD_FILE_PATH)
+		VALUES (#{user_idx}, last_insert_id(), #{boardFilePath})
 	</insert>
 	
 	<select id="getList" resultType="BoardVO">
-		select idx, user_idx, writer, title, content, views, crea_time
-		from tbl_board
-		order by idx desc
+		SELECT IDX, USER_IDX, WRITER, TITLE, CONTENT, VIEWS, CREA_TIME
+		FROM TBL_BOARD
+		ORDER BY IDX DESC
 	</select>
 	
 	<select id="getPage" resultType="BoardVO">
-		select idx, user_idx, writer, title, content, views, crea_time 
-		from tbl_board
-		where idx = #{idx} and writer = #{writer}
+		SELECT TB.IDX, TB.USER_IDX, TB.WRITER, TB.TITLE, TB.CONTENT, TB.VIEWS, TB.CREA_TIME, TUF.THUMBNAIL_IMAGE_PATH
+		FROM TBL_BOARD AS TB
+		INNER JOIN TBL_USER_PROFILE AS TUF
+		ON TB.USER_IDX = TUF.USER_IDX
+		WHERE TB.IDX = #{idx} AND TB.USER_IDX = #{user_idx}
 	</select>
 	
 	<select id="getFile" resultType="BoardFileVO">
-		select board_file_path
-		from tbl_board_file
-		where board_idx = #{idx} and writer = #{writer}
-	</select>
-	
-	<select id="getProfileImage" resultType="BoardProfileImageVO">
-		select thumbnail_file_path
-		from tbl_user_prf
-		where user_idx = #{user_idx}
+		SELECT BOARD_FILE_PATH 
+		FROM TBL_BOARD_FILE
+		WHERE BOARD_IDX = #{idx} AND USER_IDX = #{user_idx}
 	</select>
 
 	<select id="getImages" resultType="BoardImageVO">
-		select board_image_file_path
-		from tbl_board_image_file
-		where board_idx = #{idx} and writer = #{writer}
+		SELECT BOARD_ORIGINAL_IMAGE_PATH, BOARD_THUMBNAIL_IMAGE_PATH 
+		FROM TBL_BOARD_IMAGE_FILE
+		WHERE BOARD_IDX = #{idx} AND USER_IDX = #{user_idx}
 	</select>
 	
 	<delete id="deleteBoard">
