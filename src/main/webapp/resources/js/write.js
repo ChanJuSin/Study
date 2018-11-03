@@ -200,4 +200,50 @@ $(function() {
 		
 		prevForm.prev().remove();
 	});
+	
+	let videoLinks = [];
+	// 유튜브 영상 추가
+	$(".add-youtube_video").on("click", () => {
+        let videoLink = prompt("유튜브 영상 링크를 입력해주세요.");
+        
+        let deleteYouTuBeVideoTag = 
+            `	
+	          <div class="delete-youtube_list">
+		          <span>동영상 첨부가 완료되었습니다. ${videoLink}</span>
+		          <a href="#" class="delete-youtube_video">삭제</a>
+	          </div>
+            `;
+        
+        videoLink = videoLink.substring(17);
+        for (let i = 0; i < videoLinks.length; i++) {
+        	if (videoLink === videoLinks[i]) {
+        		return alert("이미 등록된 영상입니다.");
+        	} 
+        }
+        
+        let youTuBeVideoTag = 
+        `
+        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
+        	<br><br>
+	    `;
+        $(".content").append(youTuBeVideoTag);
+        
+      
+        $(".delete-youtube_videos-lists").append(deleteYouTuBeVideoTag);
+        
+        videoLinks.push(videoLink);
+    });
+	
+	// 유튜브 영상 삭제
+	$(".delete-youtube_videos-lists").on("click", ".delete-youtube_list .delete-youtube_video", function() {
+		let deleteIndex = $(this).index(".delete-youtube_list .delete-youtube_video");
+		
+		$(this).prev().remove();
+		$(this).remove();
+		
+		let target = "#" + videoLinks[deleteIndex];
+		$(target).remove();
+		
+		videoLinks.splice(deleteIndex, 1);
+	});
 });

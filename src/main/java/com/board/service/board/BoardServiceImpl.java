@@ -35,12 +35,16 @@ public class BoardServiceImpl implements BoardService {
 				fileMap.put("boardThumbnailImagePath", board_thumbnail_image_paths[index]);
 				boardDAO.imageRegister(fileMap);
 			}
+			boardDAO.imageWhetherChange(fileMap);
 		}
 		
 		if (boardFilePathList != null) {
-			for (String boardFilePath : boardFilePathList) {
-				fileMap.put("boardFilePath", boardFilePath);
-				boardDAO.fileRegister(fileMap);
+			if (boardFilePathList.size() > 0) {
+				for (String boardFilePath : boardFilePathList) {
+					fileMap.put("boardFilePath", boardFilePath);
+					boardDAO.fileRegister(fileMap);
+				}
+				boardDAO.fileWhetherChange(fileMap);
 			}
 		}
 	}

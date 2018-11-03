@@ -15,22 +15,54 @@
 		VALUES (#{user_idx}, last_insert_id(), #{boardOriginalImagePath}, #{boardThumbnailImagePath})
 	</insert>
 	
+	<update id="imageWhetherChange">
+		UPDATE TBL_BOARD 
+		SET IMAGE_WHETHER = true
+		WHERE IDX = last_insert_id() AND USER_IDX = #{user_idx}
+	</update>
+	
 	<insert id="fileRegister">
 		INSERT INTO TBL_BOARD_FILE (USER_IDX, BOARD_IDX, BOARD_FILE_PATH)
 		VALUES (#{user_idx}, last_insert_id(), #{boardFilePath})
 	</insert>
 	
+	<update id="fileWhetherChange">
+		UPDATE TBL_BOARD
+		SET FILE_WHETHER = true
+		WHERE IDX = last_insert_id() AND USER_IDX = #{user_idx}
+	</update>
+	
 	<select id="getList" resultType="BoardVO">
-		SELECT IDX, USER_IDX, WRITER, TITLE, CONTENT, VIEWS, CREA_TIME
-		FROM TBL_BOARD
+		SELECT 
+			IDX, 
+			USER_IDX,
+		    WRITER, 
+			TITLE, 
+			CONTENT, 
+			VIEWS,
+			IMAGE_WHETHER, 
+			FILE_WHETHER,
+		    VIDEO_WHETHER,  
+			CREA_TIME
+		FROM 
+			TBL_BOARD
 		ORDER BY IDX DESC
 	</select>
 	
 	<select id="getPage" resultType="BoardVO">
-		SELECT TB.IDX, TB.USER_IDX, TB.WRITER, TB.TITLE, TB.CONTENT, TB.VIEWS, TB.CREA_TIME, TUF.THUMBNAIL_IMAGE_PATH
-		FROM TBL_BOARD AS TB
-		INNER JOIN TBL_USER_PROFILE AS TUF
-		ON TB.USER_IDX = TUF.USER_IDX
+		SELECT 
+			TB.IDX,
+			TB.USER_IDX, 
+			TB.WRITER, 
+			TB.TITLE, 
+			TB.CONTENT, 
+			TB.VIEWS, 
+			TB.CREA_TIME, 
+			TUF.THUMBNAIL_IMAGE_PATH
+		FROM 
+			TBL_BOARD AS TB
+			INNER JOIN TBL_USER_PROFILE AS TUF
+			ON TB.USER_IDX = TUF.USER_IDX
 		WHERE TB.IDX = #{idx} AND TB.USER_IDX = #{user_idx}
 	</select>
 	

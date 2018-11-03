@@ -30,6 +30,8 @@
 			    
 				<div class="form-group">
 					<label>내용 (이미지 파일은 Drag & Drop 형식으로 등록가능합니다.)</label>
+					<input type="button" class="add-youtube_video" value="유튜브 영상 추가" />
+					<div class="delete-youtube_videos-lists"></div>
 					<div class="content" contentEditable="true"></div>
 					<!-- <textarea style="display:none;" rows="20" cols="163" id="content" name="content"></textarea>  -->
 					<input type="hidden" name="content" id="content" />

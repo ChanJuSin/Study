@@ -15,8 +15,14 @@ public interface BoardDAO {
 	// 이미지 등록
 	public void imageRegister(Map<String, Object> imageInfo) throws Exception;
 	
+	// 이미지 등록 여부 true
+	public void imageWhetherChange(Map<String, Object> boardInfo) throws Exception;
+	
 	// 파일 등록
 	public void fileRegister(Map<String, Object> fileInfo) throws Exception;
+	
+	// 파일 등록 여부 true
+	public void fileWhetherChange(Map<String, Object> boardInfo) throws Exception;
 	
 	// 게시글 리스트
 	public List<BoardVO> getList() throws Exception;

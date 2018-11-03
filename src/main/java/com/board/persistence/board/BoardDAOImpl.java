@@ -84,4 +84,14 @@ public class BoardDAOImpl implements BoardDAO {
 		sqlSession.update(namespace + ".modify", modifyInfo);
 	}
 
+	@Override
+	public void imageWhetherChange(Map<String, Object> boardInfo) throws Exception {
+		sqlSession.update(namespace + ".imageWhetherChange", boardInfo);
+	}
+
+	@Override
+	public void fileWhetherChange(Map<String, Object> boardInfo) throws Exception {
+		sqlSession.update(namespace + ".fileWhetherChange", boardInfo);
+	}
+
 }

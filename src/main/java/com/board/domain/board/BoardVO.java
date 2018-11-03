@@ -10,6 +10,9 @@ public class BoardVO {
 	private String title;
 	private String content;
 	private int views;
+	private boolean image_whether;
+	private boolean file_whether;
+	private boolean video_whether;
 	private Date crea_time;
 	private String thumbnail_image_path; // 프로필 이미지 경로
 	
@@ -33,6 +36,24 @@ public class BoardVO {
 	}
 	public String getTitle() {
 		return title;
+	}
+	public boolean isImage_whether() {
+		return image_whether;
+	}
+	public void setImage_whether(boolean image_whether) {
+		this.image_whether = image_whether;
+	}
+	public boolean isFile_whether() {
+		return file_whether;
+	}
+	public void setFile_whether(boolean file_whether) {
+		this.file_whether = file_whether;
+	}
+	public boolean isVideo_whether() {
+		return video_whether;
+	}
+	public void setVideo_whether(boolean video_whether) {
+		this.video_whether = video_whether;
 	}
 	public void setTitle(String title) {
 		this.title = title;
@@ -65,8 +86,9 @@ public class BoardVO {
 	@Override
 	public String toString() {
 		return "BoardVO [idx=" + idx + ", user_idx=" + user_idx + ", writer=" + writer + ", title=" + title
-				+ ", content=" + content + ", views=" + views + ", crea_time=" + crea_time + ", thumbnail_image_path="
-				+ thumbnail_image_path + "]";
+				+ ", content=" + content + ", views=" + views + ", image_whether=" + image_whether + ", file_whether="
+				+ file_whether + ", video_whether=" + video_whether + ", crea_time=" + crea_time
+				+ ", thumbnail_image_path=" + thumbnail_image_path + "]";
 	}
 	
 }

@@ -1,7 +1,6 @@
 package com.board.controller.board;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -89,13 +88,14 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public void read(BoardVO boardVO, Model model, HttpServletResponse response) throws Exception {
-		Cookie cookie = new Cookie("clientTime", "");
+	public String read(BoardVO boardVO, Model model, HttpServletResponse response) throws Exception {
+		/*Cookie cookie = new Cookie("clientTime", "");
 		cookie.setMaxAge(60 * 60);
-		response.addCookie(cookie);
+		response.addCookie(cookie);*/
 				
 		model.addAttribute("pageInfo", boardService.read(boardVO));
 		model.addAttribute("page", "board");
+		return "/board/read";
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
