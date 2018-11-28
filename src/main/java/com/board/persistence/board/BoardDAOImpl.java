@@ -1,5 +1,7 @@
 package com.board.persistence.board;
 
+import static org.hamcrest.CoreMatchers.theInstance;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
-import com.board.domain.board.BoardProfileImageVO;
 import com.board.domain.board.BoardVO;
 
 @Repository
@@ -23,11 +24,6 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void register(BoardVO board) throws Exception {
 		sqlSession.insert(namespace + ".register", board);
-	}
-	
-	@Override
-	public int getPageIdx() throws Exception {
-		return sqlSession.selectOne(namespace + ".getPageIdx");
 	}
 
 	@Override
@@ -53,11 +49,6 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public List<BoardFileVO> getFile(Map<String, Object> getFileInfo) throws Exception {
 		return sqlSession.selectList(namespace + ".getFile", getFileInfo);
-	}
-
-	@Override
-	public BoardProfileImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception {
-		return sqlSession.selectOne(namespace + ".getProfileImage", getImageInfo);
 	}
 
 	@Override
@@ -93,6 +84,26 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void modify(Map<String, Object> modifyInfo) throws Exception {
 		sqlSession.update(namespace + ".modify", modifyInfo);
+	}
+
+	@Override
+	public void imageWhetherChange(Map<String, Object> boardInfo) throws Exception {
+		sqlSession.update(namespace + ".imageWhetherChange", boardInfo);
+	}
+
+	@Override
+	public void fileWhetherChange(Map<String, Object> boardInfo) throws Exception {
+		sqlSession.update(namespace + ".fileWhetherChange", boardInfo);
+	}
+
+	@Override
+	public void videoRegister(Map<String, Object> videoMap) throws Exception {
+		sqlSession.insert(namespace + ".videoRegister", videoMap);
+	}
+
+	@Override
+	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception {
+		sqlSession.update(namespace + ".videoWhetherChange", videoMap);
 	}
 
 }

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
 	// 로그인 처리
 	@Override
-	public boolean login(String email, String pw) throws Exception {
+	public UserVO login(String email, String pw) throws Exception {
 		Map<String, String> loginMap = new HashMap<>();
 		loginMap.put("email", email);
 		loginMap.put("pw", pw);
@@ -63,15 +63,15 @@ public class UserServiceImpl implements UserService {
 
 	// 프로필 이미지 정보 가져옴
 	@Override
-	public ProfileImageVO prfImgInfo(String email) throws Exception {
-		return userDAO.getPrfImg(email);
+	public ProfileImageVO profileImageInfo(int idx) throws Exception {
+		return userDAO.getProfileImage(idx);
 	}
 	
 	// 로그인 유지
 	@Override
-	public void keepLogin(String email, String sessionKey, Date sessionLimit) throws Exception {
+	public void keepLogin(int idx, String sessionKey, Date sessionLimit) throws Exception {
 		Map<String, Object> keppUserInfo = new HashMap<>();
-		keppUserInfo.put("email", email);
+		keppUserInfo.put("idx", idx);
 		keppUserInfo.put("sessionKey", sessionKey);
 		keppUserInfo.put("sessionLimit", sessionLimit);
 		
@@ -82,12 +82,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVO getKeepLogin(String sessionKey) throws Exception {
 		return userDAO.getKeepLoginInfo(sessionKey);
-	}
-
-	// 로그인 처리 성공시 유저 정보 가져옴
-	@Override
-	public UserVO userInfo(String email) throws Exception {
-		return userDAO.getUserInfo(email);
 	}
 
 }

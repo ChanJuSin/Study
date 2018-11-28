@@ -26,21 +26,6 @@
 		<beans:property name="maxUploadSize" value="10485760" />
 	</beans:bean>
 	
-	<!-- 프로필 이미지 업로드 위치 -->
-	<beans:bean id="profileImgUploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\dev\upload\profileImage" />
-	</beans:bean>
-	
-	<!-- 게시판 이미지 업로드 위치 -->
-	<beans:bean id="boardImgUploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\dev\upload/boardImage" />
-	</beans:bean>
-	
-	<!-- 게시판 파일 업로드 위치 -->
-	<beans:bean id="boardFileUploadPath" class="java.lang.String">
-		<beans:constructor-arg value="C:\dev\upload\board" />
-	</beans:bean>
-	
 	<beans:bean id="loginInterceptor" class="com.board.interceptor.LoginInterceptor" />
 	<beans:bean id="loginAuthInterceptor" class="com.board.interceptor.LoginAuthInterceptor" />
 	<beans:bean id="keepLoginAuthInterceptor" class="com.board.interceptor.KeppLoginAuthInterceptor" />

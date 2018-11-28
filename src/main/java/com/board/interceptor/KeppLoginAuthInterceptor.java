@@ -6,11 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 
 import com.board.domain.user.ProfileImageVO;
@@ -32,11 +29,10 @@ public class KeppLoginAuthInterceptor extends HandlerInterceptorAdapter {
 			if (userVO != null) {
 				HttpSession session = request.getSession();
 				
-				ProfileImageVO profileImg = userService.prfImgInfo(userVO.getEmail());
-				
+				ProfileImageVO profileImageInfo = userService.profileImageInfo(userVO.getIdx());
 				
 				session.setAttribute("loginInfo", userVO);
-				session.setAttribute("prfImgInfo", profileImg);
+				session.setAttribute("profileImageInfo", profileImageInfo);
 			}
 		}
 	}

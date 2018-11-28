@@ -1,17 +1,14 @@
 package com.board.controller.board;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,18 +21,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.board.domain.board.BoardVO;
 import com.board.service.board.BoardService;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.UploadFileUtils;
+import com.board.util.file.FileRelatedUtils;
+import com.board.util.file.UploadFileUtils;
+import com.board.util.staticVariable.UploadPath;
 
 @Controller
 @RequestMapping("/board/*")
 public class BoardController {
-	
-	@Resource(name = "boardFileUploadPath")
-	private String boardFileUploadPath;
-	
-	@Resource(name = "boardImgUploadPath")
-	private String boardImgUploadPath;
 	
 	@Autowired
 	private BoardService boardService;
@@ -54,56 +46,51 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
-	public String writePost(BoardVO boardVO, String[] images, MultipartFile[] files, RedirectAttributes rttr) throws Exception {
-		logger.info("writer : " + boardVO.getWriter());
-		logger.info("title : " + boardVO.getTitle());
-		logger.info("content : " + boardVO.getContent());
-		logger.info("user_idx : " + boardVO.getUser_idx());
-		
+	public String writePost(BoardVO boardVO, @Nullable String[] board_original_image_paths, @Nullable String[] board_thumbnail_image_paths, @Nullable String[] video_paths,  @Nullable MultipartFile files[], RedirectAttributes rttr) throws Exception {	
 		List<String> boardFilePathList = new ArrayList<>();
 		
 		if (files != null) {
-			for (MultipartFile file : files) {
-				logger.info("" + file.getOriginalFilename());
-				logger.info("" + file.getSize());
-				logger.info("" + file.getContentType());
-				
+			for (MultipartFile file: files) {
 				if (file.getSize() > 0) {
-					String boardFilePath = UploadFileUtils.uploadFile(boardFileUploadPath, file.getOriginalFilename(), file.getBytes());
+					logger.info("file originalName : " + file.getOriginalFilename());
+					logger.info("file contentType : " + file.getContentType());
+					logger.info("file size : " + file.getSize());
 					
+					String boardFilePath = UploadFileUtils.uploadFile(UploadPath.BOARD_FILE_UPLOAD_PATH, file.getOriginalFilename(), file.getBytes());
 					boardFilePathList.add(boardFilePath);
 				}
 			}
 		}
 		
-		boardService.write(boardVO, images, boardFilePathList);
+		boardService.write(boardVO, board_original_image_paths, board_thumbnail_image_paths, video_paths, boardFilePathList);
 		
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
-	public void read(int idx, int user_idx, String writer, Model model) throws Exception {
-		model.addAttribute("pageInfo", boardService.read(idx, user_idx, writer));
+	public String read(BoardVO boardVO, Model model, HttpServletResponse response) throws Exception {
+		model.addAttribute("pageInfo", boardService.read(boardVO));
 		model.addAttribute("page", "board");
+		return "/board/read";
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(int board_idx, int user_idx, String writer, @RequestParam(value="images" ,required=false, defaultValue="") String[] images,
 	@RequestParam(value="files", required=false, defaultValue="") String[] files) throws Exception {
-		boardService.delete(board_idx, user_idx, writer, images, files, boardImgUploadPath, boardFileUploadPath);
+		boardService.delete(board_idx, user_idx, writer, images, files, UploadPath.BOARD_IMAGE_UPLOAD_PATH, UploadPath.BOARD_FILE_UPLOAD_PATH);
 		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
-	public void modifyGET(int idx, int user_idx, String writer, Model model, ModelMap modelMap) throws Exception {
-		model.addAttribute("pageInfo", boardService.read(idx, user_idx, writer));
+	public void modifyGET(BoardVO boardVO, Model model, ModelMap modelMap) throws Exception {
+		model.addAttribute("pageInfo", boardService.read(boardVO));
 		model.addAttribute("page", "board");
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/modifyDeleteFile", method = RequestMethod.POST)
 	public String modifyDeleteFile(int idx, String writer, String filePath) throws Exception {
-		DeleteFile.deleteFile(boardFileUploadPath, filePath);
+		FileRelatedUtils.deleteFile(UploadPath.BOARD_FILE_UPLOAD_PATH, filePath);
 		boardService.modifyDeleteFile(idx, writer, filePath);
 		return "1";
 	}
@@ -111,7 +98,7 @@ public class BoardController {
 	@RequestMapping(value = "/modify", method = RequestMethod.POST) 
 	public String modifyPOST(int idx, int user_idx, String writer, String title,  String content, MultipartFile[] files, @RequestParam(value="addImages", required=false, defaultValue="") String[] addImages,
 	@RequestParam(value="deleteImages", required=false, defaultValue="") String[] deleteImages) throws Exception {
-		boardService.modify(idx, user_idx, writer, title, content, files, addImages, deleteImages, boardImgUploadPath, boardFileUploadPath);
+		boardService.modify(idx, user_idx, writer, title, content, files, addImages, deleteImages, UploadPath.BOARD_IMAGE_UPLOAD_PATH, UploadPath.BOARD_FILE_UPLOAD_PATH);
 		return "redirect:/";
 	}
 	

@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
-import com.board.domain.board.BoardProfileImageVO;
 import com.board.domain.board.BoardVO;
 
 public interface BoardDAO {
@@ -13,14 +12,17 @@ public interface BoardDAO {
 	// 게시글 등록
 	public void register(BoardVO board) throws Exception;
 	
-	// 게시글 등록후 게시글 번호 얻음
-	public int getPageIdx() throws Exception;
-	
 	// 이미지 등록
 	public void imageRegister(Map<String, Object> imageInfo) throws Exception;
 	
+	// 이미지 등록 여부 true
+	public void imageWhetherChange(Map<String, Object> boardInfo) throws Exception;
+	
 	// 파일 등록
 	public void fileRegister(Map<String, Object> fileInfo) throws Exception;
+	
+	// 파일 등록 여부 true
+	public void fileWhetherChange(Map<String, Object> boardInfo) throws Exception;
 	
 	// 게시글 리스트
 	public List<BoardVO> getList() throws Exception;
@@ -30,9 +32,6 @@ public interface BoardDAO {
 	
 	// 게시글 파일 정보 얻음
 	public List<BoardFileVO> getFile(Map<String, Object> getFileInfo) throws Exception;
-	
-	// 게시글 작성자 프로필 이미지 정보 얻음
-	public BoardProfileImageVO getProfileImage(Map<String, Object> getImageInfo) throws Exception;
 	
 	// 게시글 이미지 리스트 얻음
 	public List<BoardImageVO> getImages(Map<String, Object> getImagesInfo) throws Exception;
@@ -54,5 +53,11 @@ public interface BoardDAO {
 	
 	// 게시글 수정
 	public void modify(Map<String, Object> modifyInfo) throws Exception;
+	
+	// 유튜브 영상 등록
+	public void videoRegister(Map<String, Object> videoMap) throws Exception;
+	
+	// 영상 등록 여부 true
+	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception;
 	
 }

@@ -1,4 +1,4 @@
-package com.board.util.upload;
+package com.board.util.file;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

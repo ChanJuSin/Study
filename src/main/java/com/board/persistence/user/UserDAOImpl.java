@@ -60,20 +60,14 @@ public class UserDAOImpl implements UserDAO {
 
 	// 로그인 처리 진행
 	@Override
-	public boolean loginProgress(Map<String, String> loginMap) throws Exception {
-		String returnPw = sqlSession.selectOne(namespace + ".loginProgress", loginMap);
-		
-		if (returnPw == null) {
-			return false;
-		}
-		
-		return true;
+	public UserVO loginProgress(Map<String, String> loginMap) throws Exception {
+		return sqlSession.selectOne(namespace + ".loginProgress", loginMap);
 	}
 
 	// 프로필 이미지 정보 얻음
 	@Override
-	public ProfileImageVO getPrfImg(String email) throws Exception {
-		return sqlSession.selectOne(namespace + ".getPrfImg", email);
+	public ProfileImageVO getProfileImage(int idx) throws Exception {
+		return sqlSession.selectOne(namespace + ".getProfileImage", idx);
 	}
 	
 	// 로그인 정보 유지
@@ -86,12 +80,6 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public UserVO getKeepLoginInfo(String sessionKey) throws Exception {
 		return sqlSession.selectOne(namespace + ".getKeepLoginInfo", sessionKey);
-	}
-
-	// 유저 정보 얻음
-	@Override
-	public UserVO getUserInfo(String email) throws Exception {
-		return sqlSession.selectOne(namespace + ".getUserInfo", email);
 	}
 
 }

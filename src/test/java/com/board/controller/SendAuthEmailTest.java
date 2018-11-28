@@ -1,5 +1,10 @@
 package com.board.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -42,9 +47,13 @@ public class SendAuthEmailTest {
 	
 	@Test
 	public void test() throws Exception {
-		String test = "/2018/10/29/s_b599a4ce-95f8-4d92-a8f6-7edfd45875dc_milky-way-1023340_1920.jpg";
-
-		System.out.println(test.substring(0, 12) + test.substring(14));
+		Date date = new Date();
+		date.setTime(date.getTime() + (3600 * 1000));
+		
+		DateFormat df = new SimpleDateFormat("EEE, dd-MMM-yyyy HH:mm:ss zzz");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		logger.info("" + date.getTime());
 	}
 	
 }

@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.util.file.FileRelatedUtils;
+import com.board.util.file.MediaUtils;
+import com.board.util.file.UploadFileUtils;
 import com.board.util.staticVariable.UploadPath;
-import com.board.util.upload.DeleteFile;
-import com.board.util.upload.MediaUtils;
-import com.board.util.upload.UploadFileUtils;
 
 @Controller
 @RequestMapping("/upload/*")
@@ -113,16 +113,16 @@ public class FileController {
 		
 		if (distinction.equals("profile")) {
 			// 프로필 이미지 삭제
-			DeleteFile.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath);
-			DeleteFile.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + filePath.substring(14));
+			FileRelatedUtils.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath);
+			FileRelatedUtils.deleteFile(UploadPath.PROFILE_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + filePath.substring(14));
 		} else {
 			if (MediaUtils.getMediaType(fileType) != null) {
 				// 게시글 이미지 삭제
-				DeleteFile.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath);
-				DeleteFile.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + "s_" + filePath.substring(12));
+				FileRelatedUtils.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath);
+				FileRelatedUtils.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, filePath.substring(0, 12) + "s_" + filePath.substring(12));
 			} else {
 				// 게시글 파일 삭제
-				DeleteFile.deleteFile(UploadPath.BOARD_FILE_UPLOAD_PATH, filePath);
+				FileRelatedUtils.deleteFile(UploadPath.BOARD_FILE_UPLOAD_PATH, filePath);
 			}
 		}
 		

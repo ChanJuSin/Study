@@ -31,7 +31,12 @@
 					    <tr>
 					        <th scope="row" class="text-center">${boardVO.idx }</th>
 					        <td class="text-center">${boardVO.writer }</td>
-					        <td><a href="/board/read?idx=${boardVO.idx }&user_idx=${boardVO.user_idx }&writer=${boardVO.writer}">${boardVO.title }</a></td>
+					        <td>
+					        	<a href="/board/read?idx=${boardVO.idx }&user_idx=${boardVO.user_idx }">${boardVO.title }</a>
+					        	<c:if test="${boardVO.file_whether }"><i class="fa fa-file-o"></i></c:if>
+					        	<c:if test="${boardVO.image_whether }"><i class="fa fa-file-image-o"></i></c:if>
+					        	<c:if test="${boardVO.video_whether }"><i class="fa fa-video-camera"></i></c:if>
+					        </td>
 					        <td class="text-center"><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${boardVO.crea_time }"/></td>
 					        <td class="text-center">${boardVO.views }</td>
 					    </tr>

@@ -25,26 +25,28 @@
 		where email = #{email}
 	</update>
 	
-	<select id="loginProgress" resultType="String">
-		select pw from tbl_user
-		where email = #{email} and pw = #{pw}
+	<select id="loginProgress" resultType="UserVO">
+		SELECT IDX, EMAIL, PW, NAME, AUTH_WT, CREA_TIME
+		FROM TBL_USER
+		WHERE EMAIL = #{email} and pw = #{pw}
 	</select>
 	
-	<select id="getPrfImg" resultType="ProfileImageVO">
-		select thumbnail_file_path, crea_time
-		from tbl_user_prf
-		where email = #{email}
+	<select id="getProfileImage" resultType="ProfileImageVO">
+		SELECT USER_IDX, ORIGINAL_IMAGE_PATH, THUMBNAIL_IMAGE_PATH, REGISTER_IMAGE_TIME
+		FROM TBL_USER_PROFILE
+		WHERE USER_IDX = #{idx}
 	</select>
 	
 	<insert id="keepLoginInfo">
-		update tbl_user set session_key = #{sessionKey}, session_limit = #{sessionLimit}
-		where email = #{email}
+		UPDATE TBL_USER
+		SET SESSION_KEY = #{sessionKey}, SESSION_LIMIT = #{sessionLimit}
+		WHERE IDX = #{idx}
 	</insert>
 	
 	<select id="getKeepLoginInfo" resultType="UserVO">
-		select idx, email, pw, name, auth_wt, session_key, session_limit, crea_time
-		from tbl_user 
-		where session_key = #{sessinKey} and session_limit > now()
+		SELECT IDX, EMAIL, PW, NAME, AUTH_WT, CREA_TIME
+		FROM TBL_USER
+		WHERE SESSION_KEY = #{sessionKey} AND SESSION_LIMIT > now()
 	</select>
 	
 	<select id="getUserInfo" resultType="UserVO">

@@ -71,6 +71,7 @@ $(function() {
 	$(".profile_image_sumnail").on("click", ".delete-profile_image", () => {
 		$(".profile_image_sumnail .delete-profile_image").remove();
 		$(".profile_image_sumnail .profile_image").attr("src", "/user/profile/displayProfileImage");
+		formData.delete("file");
 		imageUploadWhether = false;
 	});
 	
@@ -129,14 +130,19 @@ $(function() {
 					
 					$(".profile_image").attr("src", "/user/profile/displayProfileImage?imagePath=" + thumbnail_image_path);
 					$(".profile_image_sumnail").append(html);
+					
+					console.log("이미지 업로드 완료");
+					
+					// 회원가입
+					return $(".singUpForm .singUpForm_Submit").get(0).submit();
 				})
 				.fail((err) => {
 					console.log(err);
-					alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+					return alert("회원가입에 실패했습니다. 다시 시도해주세요.");
 				});
+		} else {
+			// 회원가입
+			return $(".singUpForm .singUpForm_Submit").get(0).submit();
 		}
-		
-		// 회원가입
-		$(".singUpForm .singUpForm_Submit").get(0).submit();
 	});
 });
