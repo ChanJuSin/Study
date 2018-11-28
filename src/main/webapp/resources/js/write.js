@@ -68,13 +68,6 @@ function fileDropDown() {
     dropZone.on("drop", function(event) {
         eventPrevent(event);
         dropZoneReset(dropZone);
-        
-        imageTagIndex += 1;
-
-        let files = event.originalEvent.dataTransfer.files;
-        file.push(files[0]);
-        
-        console.log(file);
 
         if (!checkFileType(files[0].name)) {
             alert("이미지 파일만 등록가능합니다.");
@@ -83,6 +76,11 @@ function fileDropDown() {
             alert("이미지 파일을 하나씩 등록해주세요.");
             return;
         }
+        
+        imageTagIndex += 1;
+
+        let files = event.originalEvent.dataTransfer.files;
+        file.push(files[0]);
 
         let reader = new FileReader();
         reader.readAsDataURL(files[0]);

@@ -49,7 +49,7 @@
 			<section class="read-page_body">
 				<div class="read-page_title">
 					<p>#${pageInfo.boardVO.idx }</p>
-					<h3>테스트용 게시글 입니다.</h3>
+					<h3>${pageInfo.boardVO.title }</h3>
 				</div>
 				
 				<div class="read-page_content">

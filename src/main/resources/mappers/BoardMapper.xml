@@ -78,6 +78,12 @@
 		WHERE BOARD_IDX = #{idx} AND USER_IDX = #{user_idx}
 	</select>
 	
+	<select id="getVidoes" resultType="BoardVideoVO">
+		SELECT VIDEO_PATH
+		FROM TBL_BOARD_VIDEO
+		WHERE BOARD_IDX = #{idx} AND USER_IDX = #{user_idx}
+	</select>
+	
 	<delete id="deleteBoard">
 		delete from tbl_board
 		where idx = #{board_idx} and user_idx = #{user_idx} and writer = #{writer}

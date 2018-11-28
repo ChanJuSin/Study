@@ -73,6 +73,7 @@ public class BoardServiceImpl implements BoardService {
 		pageInfo.put("boardVO", boardDAO.getPage(infoMap));
 		pageInfo.put("boardFileVO", boardDAO.getFile(infoMap));
 		pageInfo.put("boardImageVO", boardDAO.getImages(infoMap));
+		pageInfo.put("boardVideoVO", boardDAO.getVidoes(infoMap));
 		
 		return pageInfo;
 	}

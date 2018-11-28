@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
 import com.board.domain.board.BoardVO;
+import com.board.domain.board.BoardVideoVO;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO {
@@ -104,6 +105,11 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception {
 		sqlSession.update(namespace + ".videoWhetherChange", videoMap);
+	}
+	
+	@Override
+	public List<BoardVideoVO> getVidoes(Map<String, Object> videoMap) throws Exception {
+		return sqlSession.selectList(namespace + ".getVidoes", videoMap);
 	}
 
 }

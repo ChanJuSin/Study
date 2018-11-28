@@ -89,10 +89,12 @@ function fileDropDown() {
     	 imageFileUpload(file);
      });
 }
-function addImageTag(imageFilePaths) {
+
+// 이미지 삭제 태그 생성
+function addDeleteImageTag(imageFilePaths) {
 	$(".content img").each(function(index, item) {
-		$(item).after("<a class=modifyDeleteImage data-filePath=" + imageFilePaths[index] + ">삭제</a>");
-		$(item).next().css("cursor", "default");
+		$(item).after("<a class='modifyDeleteImage btn btn-default' data-filePath=" + imageFilePaths[index] + ">삭제</a>");
+		$(item).next().css("cursor", "pointer");
 	});
 	
 	$(".content input[type=hidden]").each(function(index, item) {
@@ -100,6 +102,24 @@ function addImageTag(imageFilePaths) {
 	});
 }
 
+let videoLinks = [];
+function addDeleteVideoTag(videoPaths) {
+	videoLinks = videoPaths;
+	
+	$(".content .youtube-video_item").each(function(index, item) {
+		 let deleteYouTuBeVideoTag = 
+         `	
+			 <div class="delete-youtube_list">
+			     <span>작성시 올렸던 동영상 입니다. ${videoPaths[index]}</span>
+			     <a href="#" class="delete-youtube_video">삭제</a>
+			 </div>
+        `;
+		 
+		 $(".delete-youtube_videos-lists").append(deleteYouTuBeVideoTag);
+	});
+}
+
+// 첨부파일 목록 리스트 컨트롤
 function attachmentsListDisplay() {
 	// 첨부파일 목록 show, hide 
 	$(".modify-page_attachments > input").on("click", () => {
@@ -262,5 +282,63 @@ $(function() {
 				prevTag.remove();
 			}
 		}); 
+	});
+	
+	// 유튜브 영상 추가
+	$(".add-youtube_video").on("click", () => {
+        let videoLink = prompt("유튜브 영상 링크를 입력해주세요.");
+        
+        if (videoLink === null || videoLink === "")
+        	return;
+        
+        videoLink = videoLink.substring(17);
+        if (videoLinks.length > 0) {
+        	for (let i = 0; i < videoLinks.length; i++) {
+            	if (videoLink === videoLinks[i]) {
+            		return alert("이미 등록된 영상입니다.");
+            	} 
+            }
+        }
+        
+        let deleteYouTuBeVideoTag = 
+        `	
+        	<div class="delete-youtube_list">
+        		<span>동영상 첨부가 완료되었습니다. ${videoLink}</span>
+		        <a href="#" class="delete-youtube_video">삭제</a>
+	        </div>
+         `;
+        
+        let youTuBeVideoTag = 
+        `
+        	<div class="youtube-video_item">
+	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
+	        	<br><br>
+        	</div>
+	    `;
+        
+        $(".content").append(youTuBeVideoTag);
+        
+        let youTuBeVideoPathTag = 
+		`
+			<input type="hidden" name="video_paths" value="www.youtube.com/embed/${videoLink}">
+		`;
+
+		$(".board-youtube_viedo-path_list").append(youTuBeVideoPathTag);
+        
+      
+        $(".delete-youtube_videos-lists").append(deleteYouTuBeVideoTag);
+        
+        videoLinks.push(videoLink);
+    });
+	
+	// 유튜브 영상 삭제
+	$(".delete-youtube_videos-lists").on("click", ".delete-youtube_list .delete-youtube_video", function() {
+		let deleteIndex = $(this).index(".delete-youtube_list .delete-youtube_video");
+		
+		$(this).parent().remove();
+		
+		$(".youtube-video_item").eq(deleteIndex).remove();
+		
+		videoLinks.splice(deleteIndex, 1);
 	});
 });

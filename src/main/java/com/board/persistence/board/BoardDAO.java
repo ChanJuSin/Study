@@ -6,6 +6,7 @@ import java.util.Map;
 import com.board.domain.board.BoardFileVO;
 import com.board.domain.board.BoardImageVO;
 import com.board.domain.board.BoardVO;
+import com.board.domain.board.BoardVideoVO;
 
 public interface BoardDAO {
 	
@@ -59,5 +60,8 @@ public interface BoardDAO {
 	
 	// 영상 등록 여부 true
 	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception;
+	
+	// 게시글 유튜브 영상 주소 리턴
+	public List<BoardVideoVO> getVidoes(Map<String, Object> videoMap) throws Exception;
 	
 }

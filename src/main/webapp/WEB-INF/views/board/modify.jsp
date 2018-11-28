@@ -33,6 +33,8 @@
 			    
 				<div class="form-group">
 					<label>내용 (이미지 파일은 Drag & Drop 형식으로 등록가능합니다.)</label>
+					<input type="button" class="add-youtube_video" value="유튜브 영상 추가" />
+					<div class="delete-youtube_videos-lists"></div>
 					<div class="content" contentEditable="true">${pageInfo.boardVO.content }</div>
 					<c:if test="${not empty pageInfo.boardFileVO }">
 						<div class="modify-page_attachments">
@@ -64,6 +66,8 @@
 					<input type="button" id="delFileForm" value="파일 폼 삭제" />
 				</div>
 				
+				<div class="board-youtube_viedo-path_list"></div>
+				
 				<div class="deleteImageList"></div>
 				
 				<div class="addImageList"></div>
@@ -82,7 +86,7 @@
 		List<String> imageFilePaths = new ArrayList<>();
 	%>
 	<c:forEach items="${pageInfo.boardImageVO }" var="boardImageVO" varStatus="status">
-		<c:set var="imageFilePath" value="${boardImageVO.board_image_file_path }" />
+		<c:set var="imageFilePath" value="${boardImageVO.board_original_image_path }" />
 		<%
 			imageFilePaths.add(pageContext.getAttribute("imageFilePath").toString());
 		%>
@@ -95,11 +99,35 @@
 				imageFilePaths = imageFilePaths.replace("[", "");
 				imageFilePaths = imageFilePaths.replace("]", "");
 				imageFilePaths = imageFilePaths.split(",");
-				addImageTag(imageFilePaths);
+				addDeleteImageTag(imageFilePaths);
 			</script>
 		</c:if>
 	</c:forEach>
 </c:if> 
+
+<c:if test="${not empty pageInfo.boardVideoVO }">
+	<%
+		List<String> videoPaths = new ArrayList<>();
+	%>
+	<c:forEach items="${pageInfo.boardVideoVO }" var="boardVideoVO" varStatus="status" >
+		<c:set var="videoPath" value="${boardVideoVO.video_path }" />
+		<%
+			videoPaths.add(pageContext.getAttribute("videoPath").toString());
+		%>
+		<c:if test="${status.last }">
+			<%
+				pageContext.setAttribute("videoPaths", videoPaths);
+			%>
+			<script>
+				let videoPaths = "${videoPaths}";
+				videoPaths = videoPaths.replace("[", "");
+				videoPaths = videoPaths.replace("]", "");
+				videoPaths = videoPaths.split(",");
+				addDeleteVideoTag(videoPaths);
+			</script>
+		</c:if>
+	</c:forEach>
+</c:if>
 
 
 </body>
