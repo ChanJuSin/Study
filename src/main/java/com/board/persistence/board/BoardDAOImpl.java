@@ -1,5 +1,7 @@
 package com.board.persistence.board;
 
+import static org.hamcrest.CoreMatchers.theInstance;
+
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +94,16 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public void fileWhetherChange(Map<String, Object> boardInfo) throws Exception {
 		sqlSession.update(namespace + ".fileWhetherChange", boardInfo);
+	}
+
+	@Override
+	public void videoRegister(Map<String, Object> videoMap) throws Exception {
+		sqlSession.insert(namespace + ".videoRegister", videoMap);
+	}
+
+	@Override
+	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception {
+		sqlSession.update(namespace + ".videoWhetherChange", videoMap);
 	}
 
 }

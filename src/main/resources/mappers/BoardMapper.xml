@@ -108,5 +108,16 @@
 		set title = #{title}, content = #{content}
 		where idx = #{board_idx} and user_idx = #{user_idx} and writer = #{writer}
 	</update>
+	
+	<insert id="videoRegister">
+		INSERT INTO TBL_BOARD_VIDEO (USER_IDX, BOARD_IDX, VIDEO_PATH)
+		VALUES (#{user_idx}, LAST_INSERT_ID(), #{videoPath})
+	</insert>
+	
+	<update id="videoWhetherChange">
+		UPDATE TBL_BOARD 
+		SET VIDEO_WHETHER = true
+		WHERE IDX = LAST_INSERT_ID() AND USER_IDX = #{user_idx}
+	</update>
 
 </mapper>

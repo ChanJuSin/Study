@@ -22,7 +22,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Transactional
 	@Override
-	public void write(BoardVO boardVO, String[] board_original_image_paths, String[] board_thumbnail_image_paths, List<String> boardFilePathList) throws Exception {
+	public void write(BoardVO boardVO, String[] board_original_image_paths, String[] board_thumbnail_image_paths, String[] video_paths, List<String> boardFilePathList) throws Exception {
 		boardDAO.register(boardVO);
 		
 		Map<String, Object> fileMap = new HashMap<>();
@@ -36,6 +36,14 @@ public class BoardServiceImpl implements BoardService {
 				boardDAO.imageRegister(fileMap);
 			}
 			boardDAO.imageWhetherChange(fileMap);
+		}
+		
+		if (video_paths != null) {
+			for (String video_path: video_paths) {
+				fileMap.put("videoPath", video_path);
+				boardDAO.videoRegister(fileMap);
+			}
+			boardDAO.videoWhetherChange(fileMap);
 		}
 		
 		if (boardFilePathList != null) {
@@ -145,5 +153,4 @@ public class BoardServiceImpl implements BoardService {
 		
 		boardDAO.modify(modifyInfo);
 	}
-
 }

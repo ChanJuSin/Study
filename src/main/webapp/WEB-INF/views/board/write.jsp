@@ -37,6 +37,8 @@
 					<input type="hidden" name="content" id="content" />
 				</div> 
 				
+				<div class="board-youtube_viedo-path_list"></div>
+	
 				<div class="board-original_image-path_list"></div>
 				
 				<div class="board-thumbnail_image-path_list"></div>

@@ -1,6 +1,7 @@
 let formData = new FormData();
 let file = [];
 let imageTagIndex = 0;
+let videoLinks = [];
 
 // 돔 이벤트 막기
 function eventPrevent(event) {
@@ -33,7 +34,6 @@ function imageFileUpload(file) {
 			
 			$(".content img").each(function(index, value) {
 				$(this).attr("src", "/board/image/displayBoardImage?imagePath=" + result[index]);
-				$(this).removeAttr("class");
 				let thumbnail_image_path = result[index].substring(0, 12) + "s_" + result[index].substring(12);
 				$(".board-original_image-path_list").append(`<input type="hidden" name="board_original_image_paths" value=${result[index]} />`);
 				$(".board-thumbnail_image-path_list").append(`<input type="hidden" name="board_thumbnail_image_paths" value=${thumbnail_image_path} />`);
@@ -98,8 +98,6 @@ function fileDropDown() {
             	<br/><br/>
             `;
             $(".content .image" + imageTagIndex).after(html);
-            $(".content .data-file" + imageTagIndex).val(files[0]);
-            console.dir(files[0]);
 
             let tempImage = new Image();
             tempImage.src = reader.result;
@@ -151,17 +149,6 @@ function writeFormSubmit() {
 			$("#content").val($(".content").html());
 			$("#writeForm").get(0).submit();
 		}
-		
-		/*let str = "";
-		let imageSelect = $(".content img");
-		
-		imageSelect.each(function() {
-			src = $(this).attr("src").split("&")[0].substring(29);
-			str += "<input type=hidden name='images' value='"+src+"'>";
-		});
-		
-		console.log($(".content").html());
-		*/
 	});
 }
 
@@ -201,10 +188,12 @@ $(function() {
 		prevForm.prev().remove();
 	});
 	
-	let videoLinks = [];
 	// 유튜브 영상 추가
 	$(".add-youtube_video").on("click", () => {
         let videoLink = prompt("유튜브 영상 링크를 입력해주세요.");
+        
+        if (videoLink === null || videoLink === "")
+        	return;
         
         let deleteYouTuBeVideoTag = 
             `	
@@ -214,19 +203,35 @@ $(function() {
 	          </div>
             `;
         
+        /*
+         * 	https://youtu.be/0ixNzvJNoio
+         *  유튜브 주소가 위와 같은 경우 0ixNzvJNoio 부분만 가져옴
+         */
         videoLink = videoLink.substring(17);
-        for (let i = 0; i < videoLinks.length; i++) {
-        	if (videoLink === videoLinks[i]) {
-        		return alert("이미 등록된 영상입니다.");
-        	} 
+        if (videoLinks.length > 0) {
+        	for (let i = 0; i < videoLinks.length; i++) {
+            	if (videoLink === videoLinks[i]) {
+            		return alert("이미 등록된 영상입니다.");
+            	} 
+            }
         }
         
         let youTuBeVideoTag = 
         `
-        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
-        	<br><br>
+        	<div class="youtube-video_item">
+	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
+	        	<br><br>
+        	</div>
 	    `;
+        
         $(".content").append(youTuBeVideoTag);
+        
+        let youTuBeVideoPathTag = 
+		`
+			<input type="hidden" name="video_paths" value="www.youtube.com/embed/${videoLink}">
+		`;
+
+		$(".board-youtube_viedo-path_list").append(youTuBeVideoPathTag);
         
       
         $(".delete-youtube_videos-lists").append(deleteYouTuBeVideoTag);
@@ -238,8 +243,7 @@ $(function() {
 	$(".delete-youtube_videos-lists").on("click", ".delete-youtube_list .delete-youtube_video", function() {
 		let deleteIndex = $(this).index(".delete-youtube_list .delete-youtube_video");
 		
-		$(this).prev().remove();
-		$(this).remove();
+		$(this).parent().remove();
 		
 		let target = "#" + videoLinks[deleteIndex];
 		$(target).remove();

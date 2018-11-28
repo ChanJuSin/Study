@@ -54,4 +54,10 @@ public interface BoardDAO {
 	// 게시글 수정
 	public void modify(Map<String, Object> modifyInfo) throws Exception;
 	
+	// 유튜브 영상 등록
+	public void videoRegister(Map<String, Object> videoMap) throws Exception;
+	
+	// 영상 등록 여부 true
+	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception;
+	
 }

@@ -3,7 +3,6 @@ package com.board.controller.board;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -47,26 +46,7 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
-	public String writePost(BoardVO boardVO, @Nullable String[] board_original_image_paths, @Nullable String[] board_thumbnail_image_paths, @Nullable MultipartFile files[], RedirectAttributes rttr) throws Exception {
-		logger.info("writer : " + boardVO.getWriter());
-		logger.info("title : " + boardVO.getTitle());
-		logger.info("content : " + boardVO.getContent());
-		logger.info("user_idx : " + boardVO.getUser_idx());
-		
-		logger.info("board_original_image_path : " + board_original_image_paths);
-		logger.info("board_thumbnail_image_path : " + board_thumbnail_image_paths);
-		logger.info("files : " + files);
-		
-		if ((board_original_image_paths != null) && (board_thumbnail_image_paths != null)) {
-			for(String o: board_original_image_paths) {
-				logger.info("original : " + o);
-			}
-			
-			for(String t: board_thumbnail_image_paths) {
-				logger.info("thumbnail : " + t);
-			}
-		}
-		
+	public String writePost(BoardVO boardVO, @Nullable String[] board_original_image_paths, @Nullable String[] board_thumbnail_image_paths, @Nullable String[] video_paths,  @Nullable MultipartFile files[], RedirectAttributes rttr) throws Exception {	
 		List<String> boardFilePathList = new ArrayList<>();
 		
 		if (files != null) {
@@ -82,17 +62,13 @@ public class BoardController {
 			}
 		}
 		
-		boardService.write(boardVO, board_original_image_paths, board_thumbnail_image_paths, boardFilePathList);
+		boardService.write(boardVO, board_original_image_paths, board_thumbnail_image_paths, video_paths, boardFilePathList);
 		
 		return "redirect:/board/list";
 	}
 	
 	@RequestMapping(value = "/read", method = RequestMethod.GET)
 	public String read(BoardVO boardVO, Model model, HttpServletResponse response) throws Exception {
-		/*Cookie cookie = new Cookie("clientTime", "");
-		cookie.setMaxAge(60 * 60);
-		response.addCookie(cookie);*/
-				
 		model.addAttribute("pageInfo", boardService.read(boardVO));
 		model.addAttribute("page", "board");
 		return "/board/read";

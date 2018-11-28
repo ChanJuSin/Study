@@ -10,7 +10,7 @@ import com.board.domain.board.BoardVO;
 public interface BoardService {
 	
 	// 게시글 작성 
-	public void write(BoardVO board, String[] board_original_image_paths, String[] board_thumbnail_image_paths, List<String> boardFilePathList) throws Exception;
+	public void write(BoardVO board, String[] board_original_image_paths, String[] board_thumbnail_image_paths, String[] video_paths, List<String> boardFilePathList) throws Exception;
 	
 	// 게시글리스트
 	public List<BoardVO> list() throws Exception;
