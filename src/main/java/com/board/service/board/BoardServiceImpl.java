@@ -13,6 +13,7 @@ import com.board.domain.board.BoardVO;
 import com.board.persistence.board.BoardDAO;
 import com.board.util.file.FileRelatedUtils;
 import com.board.util.file.UploadFileUtils;
+import com.board.util.staticVariable.UploadPath;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -28,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
 		Map<String, Object> fileMap = new HashMap<>();
 		/*fileMap.put("board_idx", boardDAO.getPageIdx());*/
 		fileMap.put("user_idx", boardVO.getUser_idx());
+		fileMap.put("board_idx", boardDAO.getLastInsertId());
 		
 		if ((board_original_image_paths != null) && (board_thumbnail_image_paths != null)) {
 			for (int index = 0; index < board_original_image_paths.length; index++) {
@@ -43,6 +45,7 @@ public class BoardServiceImpl implements BoardService {
 				fileMap.put("videoPath", video_path);
 				boardDAO.videoRegister(fileMap);
 			}
+			fileMap.put("whether", true);
 			boardDAO.videoWhetherChange(fileMap);
 		}
 		
@@ -112,11 +115,11 @@ public class BoardServiceImpl implements BoardService {
 		deleteFileInfo.put("boardFilePath", filePath);
 		
 		boardDAO.modifyDeleteFile(deleteFileInfo);
-	}
-
+	}  
+	
+	@Transactional
 	@Override
-	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files,
-			String[] addImages, String[] deleteImages, String boardImageUploadPath, String boardFileUploadPath) throws Exception {
+	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files, String boardImageUploadPath, String boardFileUploadPath, String[] board_original_image_paths, String[] board_thumbnail_image_paths, String[] video_paths, String[] delete_video_paths) throws Exception {
 		Map<String, Object> modifyInfo = new HashMap<>();
 		modifyInfo.put("board_idx", idx);
 		modifyInfo.put("user_idx", user_idx);
@@ -124,7 +127,7 @@ public class BoardServiceImpl implements BoardService {
 		modifyInfo.put("title", title);
 		modifyInfo.put("content", content);
 
-		if (deleteImages.length > 0) {
+		/*if (deleteImages.length > 0) {
 			for (String deleteImage: deleteImages) {
 				String filePath = deleteImage.split("\\.")[0] + "." + deleteImage.split("\\.")[1].substring(0, 3);
 				FileRelatedUtils.deleteFile(boardImageUploadPath, filePath);
@@ -140,6 +143,28 @@ public class BoardServiceImpl implements BoardService {
 				modifyInfo.put("boardImageFilePath", filePath);
 				boardDAO.imageRegister(modifyInfo);
 			}
+		}*/
+		
+		
+		if (video_paths != null) {
+			for (String video_path: video_paths) {
+				modifyInfo.put("videoPath", video_path);
+				boardDAO.videoRegister(modifyInfo);
+			}
+			modifyInfo.put("whether", true);
+			boardDAO.videoWhetherChange(modifyInfo);
+		}
+		
+		if (delete_video_paths != null) {
+			for (String delete_video_path: delete_video_paths) {
+				modifyInfo.put("delete_video_path", delete_video_path);
+				boardDAO.videoDelete(modifyInfo);
+			}
+			List<String> videoPaths = boardDAO.videoSelectPaths(modifyInfo);
+			if ((videoPaths == null) || (videoPaths.size() <= 0)) {
+				modifyInfo.put("whether", false);
+				boardDAO.videoWhetherChange(modifyInfo);
+			}
 		}
 		
 		if (files.length > 0) {
@@ -153,5 +178,23 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		boardDAO.modify(modifyInfo);
+	}
+
+	@Override
+	public void modifyDeleteImage(String board_idx, String user_idx, String[] originalImagePaths, String[] thumbnailImagePaths) throws Exception {
+		Map<String, Object> imageInfo = new HashMap<>();
+		imageInfo.put("board_idx", board_idx);
+		imageInfo.put("user_idx", user_idx);
+		
+		for (int i = 0; i < originalImagePaths.length; i++) {
+			// 서버의 폴더상에 업로드된 이미지 삭제
+			FileRelatedUtils.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, originalImagePaths[i]);
+			FileRelatedUtils.deleteFile(UploadPath.BOARD_IMAGE_UPLOAD_PATH, thumbnailImagePaths[i]);
+			
+			imageInfo.put("originalImagePath", originalImagePaths[i]);
+			imageInfo.put("thumbnailImagePath", thumbnailImagePaths[i]);
+			
+			boardDAO.modifyDeleteImage(imageInfo);
+		}
 	}
 }

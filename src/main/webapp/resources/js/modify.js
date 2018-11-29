@@ -1,3 +1,8 @@
+let deleteImageForm = new FormData();
+deleteImageForm.append("distinction", "board");
+let imageTagIndex = 0;
+let file = [];
+
 // 돔 이벤트 막기
 function eventPrevent(event) {
 	event.stopPropagation();
@@ -13,29 +18,42 @@ function dropZoneReset(dropZone) {
 //이미지 파일 업로드
 function imageFileUpload(file) {
 	let formData = new FormData();
-	formData.append("file", file);
+	
+	file.forEach(function(value, index) {
+		formData.append("files", file[index]);
+	});
 	
 	$.ajax({
-		type: "post",
-		url: "/upload/uploadFile?distinction=board",
+		method: "post",
+		url: "/board/image/uploadBoardImage",
 		data: formData,
 		processData: false,
 		contentType: false,
-		success: function(filePath) {
-			filePath = filePath.substring(0, 12) + filePath.substring(14);
+		success: function(result) {
+			$(".content .delete-board_image").remove();
 			
-			let target = $(".content");
-			let imageTag = "<img class=modifyAddImage src=/upload/displayFile?filePath=" + filePath + "&distinction=board style=vertical-align:bottom>";
-			let deleteImageTag = "<a data-filePath='"+ filePath +"'>삭제</a>";
-			
-			$(".content").on("mouseover", "a", function() {
-				$(this).css("cursor", "default");
+			$(".content img").each(function(index, value) {
+				$(this).attr("src", "/board/image/displayBoardImage?imagePath=" + result[index]);
+				let thumbnail_image_path = "" + result[index].substring(0, 12) + "s_" + result[index].substring(12);
+				$(".board-original_image-path_list").append(`<input type="hidden" name="board_original_image_paths" value=${result[index]} />`);
+				$(".board-thumbnail_image-path_list").append(`<input type="hidden" name="board_thumbnail_image_paths" value=${thumbnail_image_path} />`);
+			}).promise().done(() => {
+				$("#content").val($(".content").html());
+				$("#writeForm").get(0).submit();
 			});
-			
-			target.append(imageTag);
-			target.append(deleteImageTag);
-			target.append("<br><br>");
 		}
+	});
+}
+
+// 이미지 파일 삭제
+function imageFileDelete() {
+	$.ajax({
+		type: "post",
+		url: "/board/image/deleteBoardFile",
+		data: deleteImageForm,
+		dataType: "text",
+		processData: false,
+		contentType: false
 	});
 }
 
@@ -72,21 +90,59 @@ function fileDropDown() {
      });
      
      dropZone.on("drop", function(event) {
-    	 eventPrevent(event);
-    	 dropZoneReset(dropZone);
-    	 
-    	 let files = event.originalEvent.dataTransfer.files;
-    	 let file = files[0];
-    	 
-    	 if (!checkFileType(file.name)) {
+         eventPrevent(event);
+         dropZoneReset(dropZone);
+
+         let files = event.originalEvent.dataTransfer.files;
+         
+         if (!checkFileType(files[0].name)) {
              alert("이미지 파일만 등록가능합니다.");
              return;
          } else if (files.length > 1) {
              alert("이미지 파일을 하나씩 등록해주세요.");
              return;
          }
-    	 
-    	 imageFileUpload(file);
+         
+         imageTagIndex += 1;
+         file.push(files[0]);
+
+         let reader = new FileReader();
+         reader.readAsDataURL(files[0]);
+
+         reader.onload = () => {
+             let imageTag = `<img src=${reader.result} name=image class=addImage${imageTagIndex} style="vertical-align:bottom;" />`;
+             $(".content").append(imageTag);
+
+
+             let html = 
+             `
+             	<input type="button" class="delete-board_image btn btn-default" value="삭제"/>
+             	<br/><br/>
+             `;
+             $(".content .addImage" + imageTagIndex).after(html);
+
+             let tempImage = new Image();
+             tempImage.src = reader.result;
+
+             tempImage.onload = function() {
+                 if (tempImage.width > 1000) {
+                     let canvas = document.createElement('canvas');
+                     let canvasContext = canvas.getContext("2d");
+
+                     let imageWidth = tempImage.width / 2;
+                     let imageHeight = tempImage.height / 2;
+
+                     canvas.width = imageWidth;
+                     canvas.height = imageHeight;
+
+                     canvasContext.drawImage(this, 0, 0, imageWidth, imageHeight);
+
+                     let dataURI = canvas.toDataURL("image/jpeg");
+
+                     document.querySelector(".content .addImage" + imageTagIndex).src = dataURI;
+                 }
+             };
+         }
      });
 }
 
@@ -96,13 +152,10 @@ function addDeleteImageTag(imageFilePaths) {
 		$(item).after("<a class='modifyDeleteImage btn btn-default' data-filePath=" + imageFilePaths[index] + ">삭제</a>");
 		$(item).next().css("cursor", "pointer");
 	});
-	
-	$(".content input[type=hidden]").each(function(index, item) {
-		$(item).remove();
-	});
 }
 
 let videoLinks = [];
+// 영상 삭제 태그 생성
 function addDeleteVideoTag(videoPaths) {
 	videoLinks = videoPaths;
 	
@@ -143,8 +196,6 @@ function attachmentsListDisplay() {
 		$(".form-group:nth-child(4)").css("margin-top", 0);
 	});
 }
-
-let deleteImage = [];
 
 function modifyAttachmentsDelete() {
 	// 첨부파일 삭제
@@ -193,36 +244,10 @@ function modifyAttachmentsDelete() {
 	});
 }
 
-function modifyDeleteImage() {
-	// 이미지 삭제 데이터를 모아둠
-	$(".modifyDeleteImage").on("click", function() {
-		let currentTag = $(this);
-		let filePath = currentTag.attr("data-filePath");
-		
-		deleteImage.push(filePath);
-		
-		currentTag.prev().remove();
-		currentTag.remove();
-	});
-}
-
 function modifyFormSubmit() {
 	// 게시글 수정
 	$("#modifyForm").on("submit", function(event) {
 		event.preventDefault();
-		
-		for (let i = 0; i < deleteImage.length; i++) {
-			$(".deleteImageList").append("<input type=hidden name=deleteImages value=" + deleteImage[i] + "/>");
-		}
-		
-		$(".modifyAddImage").each(function(index, item) {
-			$(".addImageList").append("<input type=hidden name=addImages value=" + $(item).next().attr("data-filePath") + "/>");
-			$(this).removeAttr("class");
-		});
-		
-		$(".content a").remove();
-		
-		$("#content").val($(".content").html());
 		
 		if(document.getElementById("content").value.length > 50000) {
 			console.log(document.getElementById("content").value.length);
@@ -230,7 +255,17 @@ function modifyFormSubmit() {
 			return;
 		}
 		
-		$("#modifyForm").get(0).submit();
+		$(".content a").remove();
+		
+		if (file.length > 0) {
+			if (deleteImageForm.getAll("board_idx").length >= 1) {
+				imageFileDelete();
+			}
+			imageFileUpload(file);
+		} else {
+			$("#content").val($(".content").html());
+			$("#writeForm").get(0).submit();
+		}
 	});
 }
 
@@ -239,8 +274,10 @@ $(function() {
 	fileDropDown();
 	attachmentsListDisplay();
 	modifyAttachmentsDelete();
-	modifyDeleteImage();
 	modifyFormSubmit();
+	
+	deleteImageForm.append("board_idx", $("#idx").val());
+	deleteImageForm.append("user_idx", $("#user_idx").val());
 	
 	// 파일 폼 추가
 	$("#addFileForm").on("click", function() {
@@ -259,29 +296,35 @@ $(function() {
 		prevForm.prev().remove();
 	});
 	
-	// 이미지 삭제 
+	// 기존에 업로드했던 이미지 삭제 
 	$(".content").on("click", "a", function() {
 		let currentTag = $(this);
 		let prevTag = currentTag.prev();
 		
 		let filePath = currentTag.attr("data-filePath");
 
-		let formData = new FormData();
-		formData.append("filePath", filePath); 
-		formData.append("distinction", "board");
+		deleteImageForm.append("originalImagePaths", filePath);
 		
-		$.ajax({
-			type: "post",
-			url: "/upload/deleteFile",
-			data: formData,
-			dataType: "text",
-			processData: false,
-			contentType: false,
-			success: function() {
-				currentTag.remove();
-				prevTag.remove();
-			}
-		}); 
+		let thumbnailFilePath = filePath.substring(0, 12) + "s_" + filePath.substring(12);
+		deleteImageForm.append("thumbnailImagePaths", thumbnailFilePath);
+		
+		currentTag.remove();
+		prevTag.remove();
+	});
+	
+	// 수정 페이지에서 업로드한 이미지 삭제 
+	$(".content").on("click", ".delete-board_image", function() {
+		let currentTag = $(this);
+		let currentImageTagIndex = $(this).prev().index((".content img[name=image]"));
+		
+		console.log(currentImageTagIndex);
+		
+		file.splice(currentImageTagIndex, 1);
+		
+		console.log(file);
+		
+		currentTag.prev().remove();
+		currentTag.remove();
 	});
 	
 	// 유튜브 영상 추가
@@ -291,14 +334,16 @@ $(function() {
         if (videoLink === null || videoLink === "")
         	return;
         
-        videoLink = videoLink.substring(17);
+        videoLink = videoLink.trim();
         if (videoLinks.length > 0) {
         	for (let i = 0; i < videoLinks.length; i++) {
-            	if (videoLink === videoLinks[i]) {
+            	if (videoLink === videoLinks[i].trim()) {
             		return alert("이미 등록된 영상입니다.");
             	} 
             }
         }
+        
+        $(".board-youtube_video-modify-delete_list > input[value = '"+ videoLink +"']").remove();
         
         let deleteYouTuBeVideoTag = 
         `	
@@ -311,7 +356,7 @@ $(function() {
         let youTuBeVideoTag = 
         `
         	<div class="youtube-video_item">
-	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
+	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink.substring(17)} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
 	        	<br><br>
         	</div>
 	    `;
@@ -320,7 +365,7 @@ $(function() {
         
         let youTuBeVideoPathTag = 
 		`
-			<input type="hidden" name="video_paths" value="www.youtube.com/embed/${videoLink}">
+			<input type="hidden" name="video_paths" value="${videoLink}">
 		`;
 
 		$(".board-youtube_viedo-path_list").append(youTuBeVideoPathTag);
@@ -338,6 +383,9 @@ $(function() {
 		$(this).parent().remove();
 		
 		$(".youtube-video_item").eq(deleteIndex).remove();
+		
+		$(".board-youtube_viedo-path_list > input[value ='"+ videoLinks[deleteIndex] +"']").remove();
+		$(".board-youtube_video-modify-delete_list").append(`<input type="hidden" name="delete_video_paths" value="${videoLinks[deleteIndex]}" />`);
 		
 		videoLinks.splice(deleteIndex, 1);
 	});

@@ -69,6 +69,8 @@ function fileDropDown() {
         eventPrevent(event);
         dropZoneReset(dropZone);
 
+        let files = event.originalEvent.dataTransfer.files;
+        
         if (!checkFileType(files[0].name)) {
             alert("이미지 파일만 등록가능합니다.");
             return;
@@ -78,8 +80,6 @@ function fileDropDown() {
         }
         
         imageTagIndex += 1;
-
-        let files = event.originalEvent.dataTransfer.files;
         file.push(files[0]);
 
         let reader = new FileReader();
@@ -92,7 +92,7 @@ function fileDropDown() {
 
             let html = 
             `
-            	<input type="button" class="delete-board_image" value="삭제"/>
+            	<input type="button" class="delete-board_image btn btn-default" value="삭제"/>
             	<br/><br/>
             `;
             $(".content .image" + imageTagIndex).after(html);
@@ -193,19 +193,11 @@ $(function() {
         if (videoLink === null || videoLink === "")
         	return;
         
-        let deleteYouTuBeVideoTag = 
-            `	
-	          <div class="delete-youtube_list">
-		          <span>동영상 첨부가 완료되었습니다. ${videoLink}</span>
-		          <a href="#" class="delete-youtube_video">삭제</a>
-	          </div>
-            `;
-        
+        videoLink = videoLink.trim();
         /*
          * 	https://youtu.be/0ixNzvJNoio
          *  유튜브 주소가 위와 같은 경우 0ixNzvJNoio 부분만 가져옴
          */
-        videoLink = videoLink.substring(17);
         if (videoLinks.length > 0) {
         	for (let i = 0; i < videoLinks.length; i++) {
             	if (videoLink === videoLinks[i]) {
@@ -214,10 +206,18 @@ $(function() {
             }
         }
         
+        let deleteYouTuBeVideoTag = 
+        `	
+		    <div class="delete-youtube_list">
+				<span>동영상 첨부가 완료되었습니다. ${videoLink}</span>
+				<a href="#" class="delete-youtube_video">삭제</a>
+		    </div>
+        `;
+        
         let youTuBeVideoTag = 
         `
         	<div class="youtube-video_item">
-	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"http://www.youtube.com/embed/" + videoLink} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
+	        	<iframe id="${videoLink}" type="text/html" height="500" src=${"https://youtube.com/embed/" + videoLink.substring(17)} frameborder="0" style="display: inline-block; width: 100%;"></iframe>
 	        	<br><br>
         	</div>
 	    `;
@@ -226,7 +226,7 @@ $(function() {
         
         let youTuBeVideoPathTag = 
 		`
-			<input type="hidden" name="video_paths" value="www.youtube.com/embed/${videoLink}">
+			<input type="hidden" name="video_paths" value="${videoLink}">
 		`;
 
 		$(".board-youtube_viedo-path_list").append(youTuBeVideoPathTag);
@@ -243,8 +243,8 @@ $(function() {
 		
 		$(this).parent().remove();
 		
-		let target = "#" + videoLinks[deleteIndex];
-		$(target).remove();
+		$(".youtube-video_item").eq(deleteIndex).remove();
+		$(".board-youtube_viedo-path_list > input[value ='"+ videoLinks[deleteIndex] +"']").remove();
 		
 		videoLinks.splice(deleteIndex, 1);
 	});

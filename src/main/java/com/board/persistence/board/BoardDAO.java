@@ -58,10 +58,18 @@ public interface BoardDAO {
 	// 유튜브 영상 등록
 	public void videoRegister(Map<String, Object> videoMap) throws Exception;
 	
+	// 유튜브 영상 삭제
+	public void videoDelete(Map<String, Object> videoMap) throws Exception;
+	
 	// 영상 등록 여부 true
 	public void videoWhetherChange(Map<String, Object> videoMap) throws Exception;
+	
+	// 영상 갯수 리턴
+	public List<String> videoSelectPaths(Map<String, Object> videoMap) throws Exception;
 	
 	// 게시글 유튜브 영상 주소 리턴
 	public List<BoardVideoVO> getVidoes(Map<String, Object> videoMap) throws Exception;
 	
+	// 마지막 insert idx 리턴
+	public int getLastInsertId() throws Exception;
 }

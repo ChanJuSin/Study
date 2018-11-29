@@ -96,9 +96,9 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/modify", method = RequestMethod.POST) 
-	public String modifyPOST(int idx, int user_idx, String writer, String title,  String content, MultipartFile[] files, @RequestParam(value="addImages", required=false, defaultValue="") String[] addImages,
-	@RequestParam(value="deleteImages", required=false, defaultValue="") String[] deleteImages) throws Exception {
-		boardService.modify(idx, user_idx, writer, title, content, files, addImages, deleteImages, UploadPath.BOARD_IMAGE_UPLOAD_PATH, UploadPath.BOARD_FILE_UPLOAD_PATH);
+	public String modifyPOST(int idx, int user_idx, String writer, String title,  String content, MultipartFile[] files, @Nullable String[] board_original_image_paths, @Nullable String[] board_thumbnail_image_paths,
+			@Nullable String[] video_paths, @Nullable String[] delete_video_paths) throws Exception {
+		boardService.modify(idx, user_idx, writer, title, content, files, UploadPath.BOARD_IMAGE_UPLOAD_PATH, UploadPath.BOARD_FILE_UPLOAD_PATH, board_original_image_paths, board_thumbnail_image_paths, video_paths, delete_video_paths);
 		return "redirect:/";
 	}
 	

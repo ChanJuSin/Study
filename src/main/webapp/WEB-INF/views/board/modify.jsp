@@ -67,10 +67,7 @@
 				</div>
 				
 				<div class="board-youtube_viedo-path_list"></div>
-				
-				<div class="deleteImageList"></div>
-				
-				<div class="addImageList"></div>
+				<div class="board-youtube_video-modify-delete_list"></div>
 				
 				<input type="hidden" id="idx" name="idx" value="${pageInfo.boardVO.idx }" />
 				<input type="hidden" id="user_idx" name="user_idx" value="${loginInfo.idx }" />
@@ -99,6 +96,9 @@
 				imageFilePaths = imageFilePaths.replace("[", "");
 				imageFilePaths = imageFilePaths.replace("]", "");
 				imageFilePaths = imageFilePaths.split(",");
+				for (let i = 0; i < imageFilePaths.length; i++) {
+					imageFilePaths[i] = imageFilePaths[i].trim();
+				}
 				addDeleteImageTag(imageFilePaths);
 			</script>
 		</c:if>
@@ -123,6 +123,9 @@
 				videoPaths = videoPaths.replace("[", "");
 				videoPaths = videoPaths.replace("]", "");
 				videoPaths = videoPaths.split(",");
+				for (let i = 0; i < videoPaths.length; i++) {
+					videoPaths[i] = videoPaths[i].trim();
+				}
 				addDeleteVideoTag(videoPaths);
 			</script>
 		</c:if>

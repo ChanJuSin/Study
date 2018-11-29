@@ -100,13 +100,24 @@
 	</delete>
 	
 	<delete id="modifyDeleteFile">
-		delete from tbl_board_file
-		where board_idx = #{board_idx} and writer = #{writer} and board_file_path = #{boardFilePath}
+		DELETE 
+		FROM
+			TBL_BOARD_FILE
+		WHERE
+			BOARD_IDX = #{board_idx} AND
+			WRITER = #{writer} AND
+			BOARD_FILE_PATH = #{boardFilePath}
 	</delete>
 	
 	<delete id="modifyDeleteImage">
-		delete from tbl_board_image_file 
-		where board_idx = #{board_idx} and writer = #{writer} and board_image_file_path = #{boardImageFilePath}
+		DELETE
+		FROM
+			TBL_BOARD_IMAGE_FILE
+		WHERE 
+			BOARD_IDX = #{board_idx} AND
+			USER_IDX = #{user_idx} AND
+			BOARD_ORIGINAL_IMAGE_PATH = #{originalImagePath} AND
+			BOARD_THUMBNAIL_IMAGE_PATH = #{thumbnailImagePath}
 	</delete>
 	
 	<update id="modify">
@@ -117,13 +128,56 @@
 	
 	<insert id="videoRegister">
 		INSERT INTO TBL_BOARD_VIDEO (USER_IDX, BOARD_IDX, VIDEO_PATH)
-		VALUES (#{user_idx}, LAST_INSERT_ID(), #{videoPath})
+		SELECT
+			#{user_idx}, 
+			#{board_idx}, 
+			#{videoPath}
+		FROM 
+			DUAL
+		WHERE NOT EXISTS 
+		(
+			SELECT 
+				VIDEO_PATH
+			FROM
+				TBL_BOARD_VIDEO
+			WHERE 
+				VIDEO_PATH = #{videoPath}
+		)
 	</insert>
 	
+	<delete id="videoDelete">
+		DELETE 
+		FROM 
+			TBL_BOARD_VIDEO 
+		WHERE 
+			USER_IDX = #{user_idx} AND
+			BOARD_IDX = #{board_idx} AND
+			VIDEO_PATH = #{delete_video_path}
+	</delete>
+	
 	<update id="videoWhetherChange">
-		UPDATE TBL_BOARD 
-		SET VIDEO_WHETHER = true
-		WHERE IDX = LAST_INSERT_ID() AND USER_IDX = #{user_idx}
+		UPDATE 
+			TBL_BOARD 
+		SET 
+			VIDEO_WHETHER = #{whether}
+		WHERE 
+			IDX = #{board_idx} AND 
+			USER_IDX = #{user_idx}
 	</update>
+	
+	<select id="videoSelectPaths" resultType="string">
+		SELECT 
+			VIDEO_PATH
+		FROM
+			TBL_BOARD_VIDEO
+		WHERE 
+			USER_IDX = #{user_idx} AND
+			BOARD_IDX = #{board_idx}
+	</select>
+	
+	<select id="getLastInsertId" resultType="int">
+		SELECT
+			LAST_INSERT_ID()
+	</select>
 
 </mapper>

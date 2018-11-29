@@ -25,6 +25,8 @@ public interface BoardService {
 	public void modifyDeleteFile(int idx, String writer, String filePath) throws Exception;
 	
 	// 게시글 수정
-	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files, String[] addImages, String[] deleteImages, String boardImageUploadPath, String boardFileUploadPath) throws Exception;
+	public void modify(int idx, int user_idx, String writer, String title, String content, MultipartFile[] files, String boardImageUploadPath, String boardFileUploadPath, String[] board_original_image_paths, String[] board_thumbnail_image_paths, String[] video_paths, String[] delete_video_paths) throws Exception;
 	
+	// 게시글 수정시 이미지 파일 삭제
+	public void modifyDeleteImage(String board_idx, String user_idx, String[] originalImagePaths, String[] thumbnailImagePaths) throws Exception;
 }

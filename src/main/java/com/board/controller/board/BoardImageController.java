@@ -3,8 +3,7 @@ package com.board.controller.board;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.service.board.BoardService;
 import com.board.util.file.FileRelatedUtils;
 import com.board.util.file.UploadFileUtils;
 import com.board.util.staticVariable.UploadPath;
@@ -21,7 +21,8 @@ import com.board.util.staticVariable.UploadPath;
 @RequestMapping("/board/image/")
 public class BoardImageController {
 
-	private static final Logger logger = LoggerFactory.getLogger(BoardImageController.class);
+	@Autowired
+	private BoardService boardServiceImpl;
 	
 	// 게시글 이미지 업로드
 	@ResponseBody
@@ -52,5 +53,12 @@ public class BoardImageController {
 		
 	}
 	
+	// 게시글 이미지 파일 삭제
+	@ResponseBody
+	@RequestMapping(value = "/deleteBoardFile", method = RequestMethod.POST) 
+	public String deleteBoardFile(String board_idx, String user_idx, String[] originalImagePaths, String[] thumbnailImagePaths) throws Exception {
+		boardServiceImpl.modifyDeleteImage(board_idx, user_idx, originalImagePaths, thumbnailImagePaths);
+		return "게시글 이미지가 삭제되었습니다.";
+	}
 	
 }
